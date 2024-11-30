@@ -356,8 +356,15 @@
           }
         }
       });
-      document.addEventListener('mouseup', (e) => {
+      document.addEventListener('mouseup', async function(e){
         const 손 = HTML('#플레이어손');
+        await 순간이동(
+              '#플레이어손',
+              HTML('#플레이어손').style.left,
+              'calc(10% + 45px)'
+            );
+        
+        setTimeout(()=>{
         const 손위치 = 손.getBoundingClientRect(); // 플레이어손의 화면에서의 절대적 위치
         const 월드 = HTML('#월드');
 
@@ -387,7 +394,13 @@
         눈덩이.style.border = '1px solid black';
 
         // 포물선 이동 함수 적용
-        포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
+       포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
+      },100);
+        setTimeout(()=>{순간이동(
+              '#플레이어손',
+              HTML('#플레이어손').style.left,
+              'calc(10% + 25px)'
+            );},2000);
       });
 
       // 게임 도움 함수
@@ -399,7 +412,7 @@
         interval = 16
       ) {
         const obj = HTML(selector);
-        obj.style.transition = ''; // 기존 transition을 비활성화하여 자연스러운 움직임
+        obj.style.transition = '';
         const startX = obj.offsetLeft,
           startY = obj.offsetTop;
 
