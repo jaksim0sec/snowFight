@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>눈싸움4</title>
+    <title>눈싸움3</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <style>
@@ -22,7 +22,6 @@
         border: none;
         border-radius: 10px;
         background: linear-gradient(to bottom, #9eeae0, #b3f0e7, #d1faf3);
-
         overflow: hidden;
         position: relative;
       }
@@ -91,8 +90,7 @@
         transition: all 0.6s cubic-bezier(0.5, 0.8, 0.3, 1);
         border-radius: 50%;
         /*border: 1.5px solid black;*/
-        background: linear-gradient(45deg, #e7d9ca, #ffffff);
-        border: 1px solid #EED9C050;
+        background: linear-gradient(45deg, #f1dcbdfd, #ffffff);
       }
 
       .눈 {
@@ -102,14 +100,35 @@
         transition: all 0.6s cubic-bezier(0.5, 0.8, 0.3, 1);
         border-radius: 50%;
         /*border: 1.5px solid black;*/
-        background: linear-gradient(to top, #fdf1de, #ffffff);
-        border: 1.5px solid #EED9C099;
+        background: white;
       }
 
       #플레이어 img {
         width: 100%;
         position: absolute;
         bottom: 0px;
+      }
+
+      progress {
+        width: 100px;
+        height: 12px;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      progress::-webkit-progress-bar {
+        background-color: #000000CC;
+        border-radius: 8px;
+      }
+
+      progress::-webkit-progress-value {
+        background: linear-gradient(to right, #ff3e3e, #ff7f7f);
+        border-radius: 8px;
+      }
+
+      progress::-moz-progress-bar {
+        background: linear-gradient(to right, #ff3e3e, #ff7f7f);
+        border-radius: 8px;
       }
 
       .오브젝트 {
@@ -149,6 +168,13 @@
       #적군기관총 {
         right: calc(50% - 25px - 250px);
       }
+
+      #캐릭터체력{
+        position: absolute;
+        left: 50%;
+        bottom: calc(10% + 100px);
+        transform: translateX(-50%);
+      }
     </style>
   </head>
   <body>
@@ -169,6 +195,7 @@
         <img src="w1.png" />
       </div>
       <div id="플레이어손" class="오브젝트"></div>
+      <progress value="50" max="100" id="캐릭터체력"></progress>
     </div>
     <div id="그림자"></div>
 
@@ -359,47 +386,47 @@
           }
         }
       });
-      document.addEventListener('mouseup', async function(e){
+      document.addEventListener('mouseup', async function (e) {
         const 손 = HTML('#플레이어손');
         const 손이전 = HTML('#플레이어손').style.left;
         const 손위치 = 손.getBoundingClientRect();
         //if(e.clientX>손위치.left){alert('dd')}
         await 순간이동(
-              '#플레이어손',
-              (e.clientX>손위치.left)? 'calc(50% - 15px + 40px)': 'calc(50% - 15px - 40px)',
-              'calc(10% + 50px)'
-            );
-        
-        setTimeout(()=>{
-        const 월드 = HTML('#월드');
-        const 월드위치 = 월드.getBoundingClientRect();
-        const 손X = 손위치.left - 월드위치.left;
-        const 손Y = 손위치.bottom - 월드위치.bottom;
-        const 목표X = e.clientX - 월드위치.left + 'px';
-        const 목표Y = '9%'; // 상대적 목표 Y 위치 (9%)
+          '#플레이어손',
+          e.clientX > 손위치.left
+            ? 'calc(50% - 15px + 40px)'
+            : 'calc(50% - 15px - 40px)',
+          'calc(10% + 50px)'
+        );
 
-        // 눈덩이 생성
-        let 눈덩이 = document.createElement('div');
-        게임설정.눈덩이카운터++;
-        눈덩이.classList.add('눈'); // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
-        눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
-        HTML('#월드').appendChild(눈덩이);
-        눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`);
+        setTimeout(() => {
+          const 월드 = HTML('#월드');
+          const 월드위치 = 월드.getBoundingClientRect();
+          const 손X = 손위치.left - 월드위치.left;
+          const 손Y = 손위치.bottom - 월드위치.bottom;
+          const 목표X = e.clientX - 월드위치.left + 'px';
+          const 목표Y = '9%'; // 상대적 목표 Y 위치 (9%)
 
-        // 눈덩이 초기 위치를 손의 절대적 위치로 설정 (월드의 상대적 위치로 변환)
-        눈덩이.style.position = 'absolute';
-        눈덩이.style.left = 손X + 'px'; // 월드 내의 상대적 X 좌표 사용
-        눈덩이.style.bottom = 손Y + 'px'; // 월드 내의 상대적 Y 좌표 사용 (bottom 사용)
-        //눈덩이.style.border = '1px solid black';
+          // 눈덩이 생성
+          let 눈덩이 = document.createElement('div');
+          게임설정.눈덩이카운터++;
+          눈덩이.classList.add('눈'); // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
+          눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
+          HTML('#월드').appendChild(눈덩이);
+          눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`);
 
-        // 포물선 이동 함수 적용
-       포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
-      },100);
-        setTimeout(()=>{순간이동(
-              '#플레이어손',
-              손이전,
-              'calc(10% + 25px)'
-            );},500);
+          // 눈덩이 초기 위치를 손의 절대적 위치로 설정 (월드의 상대적 위치로 변환)
+          눈덩이.style.position = 'absolute';
+          눈덩이.style.left = 손X + 'px'; // 월드 내의 상대적 X 좌표 사용
+          눈덩이.style.bottom = 손Y + 'px'; // 월드 내의 상대적 Y 좌표 사용 (bottom 사용)
+          눈덩이.style.border = '1px solid black';
+
+          // 포물선 이동 함수 적용
+          포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
+        }, 100);
+        setTimeout(() => {
+          순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
+        }, 500);
       });
 
       // 게임 도움 함수
