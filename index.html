@@ -358,25 +358,21 @@
       });
       document.addEventListener('mouseup', async function(e){
         const 손 = HTML('#플레이어손');
+        const 손이전 = HTML('#플레이어손').style.left;
+        const 손위치 = 손.getBoundingClientRect();
+        //if(e.clientX>손위치.left){alert('dd')}
         await 순간이동(
               '#플레이어손',
-              HTML('#플레이어손').style.left,
+              (e.clientX>손위치.left)? 'calc(50% - 10px)': 'calc(50% - 50px)',
               'calc(10% + 45px)'
             );
         
         setTimeout(()=>{
-        const 손위치 = 손.getBoundingClientRect(); // 플레이어손의 화면에서의 절대적 위치
         const 월드 = HTML('#월드');
-
-        // 월드의 위치와 크기 가져오기
         const 월드위치 = 월드.getBoundingClientRect();
-
-        // 플레이어손의 화면상 절대적 위치를 가져옴
-        const 손X = 손위치.left - 월드위치.left; // 월드의 상대적 X 좌표
-        const 손Y = 손위치.bottom - 월드위치.bottom; // 월드의 상대적 Y 좌표 (bottom 사용)
-
-        // 클릭된 목표 위치 계산 (예시: 목표는 화면상의 (e.clientX, e.clientY)로 설정)
-        const 목표X = e.clientX - 월드위치.left + 'px'; // 월드 내의 상대적 목표 X 위치
+        const 손X = 손위치.left - 월드위치.left;
+        const 손Y = 손위치.bottom - 월드위치.bottom;
+        const 목표X = e.clientX - 월드위치.left + 'px';
         const 목표Y = '9%'; // 상대적 목표 Y 위치 (9%)
 
         // 눈덩이 생성
@@ -398,9 +394,9 @@
       },100);
         setTimeout(()=>{순간이동(
               '#플레이어손',
-              HTML('#플레이어손').style.left,
+              손이전,
               'calc(10% + 25px)'
-            );},2000);
+            );},500);
       });
 
       // 게임 도움 함수
