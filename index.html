@@ -370,9 +370,9 @@
   const 손위치 = getComputedStyle(손);
   const 부모 = 손.parentElement;
 
-  // 손의 현재 위치
-  const 원래X = 손위치.left; // getComputedStyle로 계산된 left 값 가져오기
-  const 원래Y = 손위치.bottom; // getComputedStyle로 계산된 bottom 값 가져오기
+  // 손의 현재 위치 (절대적인 위치 계산)
+  const 손AbsoluteX = e.clientX - 부모.getBoundingClientRect().left;
+  const 손AbsoluteY = e.clientY - 부모.getBoundingClientRect().top;
 
   // 클릭된 목표 위치 계산
   const 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
@@ -385,16 +385,20 @@
   눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
   HTML('#월드').appendChild(눈덩이);
   눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`);
-  
-  // 눈덩이 초기 위치를 손의 위치로 설정
+
+  // 눈덩이 초기 위치를 손의 절대적 위치로 설정
   눈덩이.style.position = 'absolute';
-  눈덩이.style.left = 원래X;  // 손위치에서 계산한 left 사용
-  눈덩이.style.bottom = 원래Y;  // 손위치에서 계산한 bottom 사용
+
+  // #플레이어손의 절대적인 위치를 기반으로 눈덩이 위치 설정
+  눈덩이.style.left = 손AbsoluteX + 'px';  // #플레이어손의 절대적 left
+  눈덩이.style.top = 손AbsoluteY + 'px';   // #플레이어손의 절대적 top
+
   눈덩이.style.border = '1px solid black';
 
   // 포물선 이동 함수 적용
   포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
 });
+
 
 
       // 게임 도움 함수
