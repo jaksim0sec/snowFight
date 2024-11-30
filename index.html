@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      body {
+        width: 100vw;
+        height: 100vh;
+        margin: 0px;
+        padding: 0px;
+        background-color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #보드 {
+        width: 95vw;
+        height: 90vh;
+        border: none;
+        border-radius: 10px;
+        box-shadow: inset -8px -8px 5px #00000050, inset 8px 8px #ffffff30;
+        background-color: white;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #보드 * {
+        transition: all 0.2s ease;
+      }
+
+      #월드 {
+        width: 1800px;
+        border: 1px solid black;
+        height: 100%;
+        position: absolute;
+        bottom: 0px;
+        left: calc(50% - 500px);
+        display: flex;
+        top: 0px;
+        overflow: hidden;
+        /*justify-content: center;*/
+      }
+
+      #땅 {
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 10%;
+        border: 1px solid black;
+        display: flex;
+      }
+
+      .영역 {
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+      }
+
+      #플레이어 {
+        width: 55px;
+        min-height: 100px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) scaleX(-1);
+        display: flex;
+        justify-content: center;
+        transition: transform 0.5s ease;
+      }
+
+      #플레이어손 {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        left: calc(50% - 30px);
+        bottom: calc(10% + 25px);
+        transform: translateX(-50%) scaleX(-1);
+        display: flex;
+        justify-content: center;
+        transition: all 0.6s cubic-bezier(0.5, 0.8, 0.3, 1);
+        border-radius: 50%;
+        border: 1.5px solid black;
+        background: white;
+      }
+
+      #플레이어 img {
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+      }
+
+      .오브젝트 {
+        position: absolute;
+        bottom: 10%;
+      }
+
+      .기지 {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+      }
+      #아군기지 {
+        left: 20px;
+      }
+
+      #적군기지 {
+        right: 20px;
+      }
+
+      .판 {
+        width: 50px;
+        height: 100px;
+        left: calc(50% - 25px);
+        border: 1px solid black;
+      }
+
+      .기관총 {
+        border: 1px solid black;
+        width: 50px;
+        height: 50px;
+      }
+
+      #아군기관총 {
+        left: calc(50% - 25px - 250px);
+      }
+      #적군기관총 {
+        right: calc(50% - 25px - 250px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="보드">
+      <div id="월드">
+        <div id="땅">
+          <div class="영역">ㅇ</div>
+          <div class="영역">ㅈ</div>
+        </div>
+        <div class="오브젝트 기지" id="아군기지">아군기지</div>
+        <div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>
+        <div class="오브젝트 판">판</div>
+        <div class="오브젝트 기관총" id="적군기관총">ㅈㄱ</div>
+        <div class="오브젝트 기지" id="적군기지">적군기지</div>
+        <div></div>
+      </div>
+      <div id="플레이어" class="오브젝트">
+        <img src="https://ifh.cc/g/fqQQHT.png" />
+      </div>
+      <div id="플레이어손" class="오브젝트"></div>
+    </div>
+
+    <script>
+      //기본함수팩
+      function HTML(name) {
+        return document.querySelector(name);
+      }
+      function 랜덤(min, max) {
+        // 출처 : GPT
+        const time = Date.now();
+        let seed = time ^ (time >> 3);
+        seed = (seed * 9301 + 49297) % 233280;
+        const random = (seed / 233280) * Math.sin(seed);
+        return Math.floor((Math.abs(random) % 1) * (max - min + 1)) + min;
+      }
+
+      function 토글(문자, 글자) {
+        if (문자.includes(글자)) {
+          while (!문자.includes(글자)) {
+            문자 = 문자.replace(글자, '');
+          }
+        } else {
+          문자 += 글자;
+        }
+      }
+
+      function 터치(대상일, 대상이) {
+        const 대상1 = HTML(대상일).getBoundingClientRect();
+        const 대상2 = HTML(대상이).getBoundingClientRect();
+
+        const 대상1중심 = {
+          x: 대상1.left + 대상1.width / 2,
+          y: 대상1.top + 대상1.height / 2,
+        };
+        const 대상2중심 = {
+          x: 대상2.left + 대상2.width / 2,
+          y: 대상2.top + 대상2.height / 2,
+        };
+
+        const 거리 = {
+          x: Math.abs(대상1중심.x - 대상2중심.x),
+          y: Math.abs(대상1중심.y - 대상2중심.y),
+        };
+
+        const 허용거리 = {
+          x: (대상1.width + 대상2.width) / 2,
+          y: (대상1.height + 대상2.height) / 2,
+        };
+
+        return 거리.x <= 허용거리.x && 거리.y <= 허용거리.y;
+      }
+
+      //정의
+      const 시스템설정 = { 시간: { 키: 100 } };
+      const 게임설정 = { 상태: { 속도: 25 } };
+      const 이미지 = {
+        캐릭터: {
+          정보: [
+            'w1.png',
+            'w2.png',
+            'w3.png',
+          ],
+          카운터: 0,
+        },
+        숙캐릭터: {
+          정보: [
+            's1.png',
+            's2.png',
+            's3.png',
+          ],
+          카운터: 0,
+        },
+      };
+      const 함수 = {
+        키: {
+          a: function () {
+            HTML('#플레이어').style.transform = 'translateX(-50%) scaleX(1)';
+            순간이동(
+              '#플레이어손',
+              'calc(50% + 30px)',
+              HTML('#플레이어손').style.bottom
+            );
+            if (터치('#플레이어', '.판')) {
+              이동('#월드', -게임설정.상태.속도 / 1.5, 0);
+            } else {
+              이동('#월드', 게임설정.상태.속도, 0);
+              이미지[요소['#플레이어'].상태].카운터++;
+              if (
+                이미지[요소['#플레이어'].상태].카운터 >
+                이미지[요소['#플레이어'].상태].정보.length - 1
+              ) {
+                이미지[요소['#플레이어'].상태].카운터 = 0;
+              }
+              //if(이미지[요소['#플레이어'].상태].카운터 === 2){alert('')}
+              HTML('#플레이어 img').src =
+                이미지[요소['#플레이어'].상태].정보[
+                  이미지[요소['#플레이어'].상태].카운터
+                ];
+            }
+          },
+          d: function () {
+            HTML('#플레이어').style.transform = 'translateX(-50%) scaleX(-1)';
+            순간이동(
+              '#플레이어손',
+              'calc(50% - 30px)',
+              HTML('#플레이어손').style.bottom
+            );
+            if (터치('#플레이어', '.판')) {
+              이동('#월드', 게임설정.상태.속도 / 1.5, 0);
+            } else {
+              이동('#월드', -게임설정.상태.속도, 0);
+              이미지[요소['#플레이어'].상태].카운터++;
+              if (
+                이미지[요소['#플레이어'].상태].카운터 >
+                이미지[요소['#플레이어'].상태].정보.length - 1
+              ) {
+                이미지[요소['#플레이어'].상태].카운터 = 0;
+              }
+              HTML('#플레이어 img').src =
+                이미지[요소['#플레이어'].상태].정보[
+                  이미지[요소['#플레이어'].상태].카운터
+                ];
+            }
+          },
+          s: function () {
+            요소['#플레이어'].상태 = '숙캐릭터';
+            순간이동(
+              '#플레이어손',
+              HTML('#플레이어손').style.left,
+              'calc(10% + 15px)'
+            );
+            이미지[요소['#플레이어'].상태].카운터 = 0;
+            HTML('#플레이어 img').src =
+              이미지[요소['#플레이어'].상태].정보[
+                이미지[요소['#플레이어'].상태].카운터
+              ];
+              //alert(이미지[요소['#플레이어'].상태])
+          },
+          w: function () {
+            요소['#플레이어'].상태 = '캐릭터';
+            순간이동(
+              '#플레이어손',
+              HTML('#플레이어손').style.left,
+              'calc(10% + 25px)'
+            );
+            이미지[요소['#플레이어'].상태].카운터 = 0;
+            HTML('#플레이어 img').src =
+              이미지[요소['#플레이어'].상태].정보[
+                이미지[요소['#플레이어'].상태].카운터
+              ];
+          },
+        },
+        키종료: {
+          a: function () {
+            HTML('#플레이어 img').src = 이미지[요소['#플레이어'].상태].정보[0];
+            if (터치('#플레이어', '.판')) {
+              이동('#월드', -게임설정.상태.속도, 0);
+            }
+          },
+          d: function () {
+            HTML('#플레이어 img').src = 이미지[요소['#플레이어'].상태].정보[0];
+            if (터치('#플레이어', '.판')) {
+              이동('#월드', 게임설정.상태.속도, 0);
+            }
+          },
+        },
+      };
+
+      let 순환 = { 키: {} };
+      let 요소 = {
+        기본형식: { hp: 0 },
+        '#플레이어': {
+          x: HTML('#플레이어').getBoundingClientRect().left,
+          y: HTML('#플레이어').getBoundingClientRect().bottom,
+          상태: '캐릭터',
+        },
+      };
+      //입력관리
+      document.addEventListener('keydown', (e) => {
+        const key = e.key;
+        if (!순환.키[key] && 함수.키[key]) {
+          순환.키[key] = setInterval(() => {
+            함수.키[key]();
+          }, 시스템설정.시간.키);
+        }
+      });
+
+      document.addEventListener('keyup', async function (e) {
+        const key = e.key;
+        if (순환.키[key]) {
+          await clearInterval(순환.키[key]);
+          delete 순환.키[key];
+          if (함수.키종료[key]) {
+            함수.키종료[key]();
+          }
+        }
+      });
+      document.addEventListener('mouseup', (e) => {
+        const 손 = HTML('#플레이어손');
+        const 부모 = 손.parentElement;
+
+        const 원래X = 손.style.left;
+        const 원래Y = 손.style.bottom;
+
+        const 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
+        const 목표Y = '9%';
+
+        포물선이동('#플레이어손', 목표X, 목표Y);
+      });
+
+      // 게임 도움 함수
+      function 포물선이동(
+        selector,
+        targetX,
+        targetY,
+        duration = 1000,
+        interval = 16
+      ) {
+        const obj = HTML(selector);
+        obj.style.transition = ''; // 기존 transition을 비활성화하여 자연스러운 움직임
+        const startX = obj.offsetLeft,
+          startY = obj.offsetTop;
+
+        // 목표값이 px인지 %인지 확인하고 처리
+        const targetXValue = targetX.endsWith('%')
+          ? (parseFloat(targetX) / 100) * window.innerWidth
+          : parseFloat(targetX);
+        const targetYValue = targetY.endsWith('%')
+          ? (parseFloat(targetY) / 100) * window.innerHeight
+          : parseFloat(targetY);
+
+        const dx = targetXValue - startX; // x 방향 거리
+        const dy = targetYValue - startY; // y 방향 거리
+        const totalTime = duration / 1000; // 시간을 초 단위로 변환
+        const g = 9.8; // 중력 가속도 (m/s^2)
+
+        // x 방향 속도와 y 방향 속도를 구하기 위해 필요한 비율 계산
+        const v_x = dx / totalTime; // 수평 속도
+
+        // 목표 Y 지점까지 정확히 도달하기 위한 초기 수직 속도 계산
+        const v_y_initial = (dy + 0.5 * g * Math.pow(totalTime, 2)) / totalTime; // 수직 속도
+
+        let t = 0;
+
+        const move = setInterval(() => {
+          t += interval / 1000;
+
+          if (t >= totalTime) {
+            clearInterval(move);
+            obj.style.left = `${targetXValue}px`; // 목표 X로 정확히 설정
+            obj.style.bottom = `${targetYValue}px`; // 목표 Y로 정확히 설정
+            return;
+          }
+
+          // x 좌표 계산 (등속 운동)
+          const x = startX + v_x * t;
+
+          // y 좌표 계산 (가속도 운동)
+          const y = startY + v_y_initial * t - 0.5 * g * Math.pow(t, 2);
+
+          // 객체의 위치 업데이트
+          obj.style.left = `${x}px`;
+          obj.style.bottom = `${y}px`; // 정확한 y 위치 계산
+        }, interval);
+      }
+
+      function 이동(대상, x, y) {
+        const 대상요소 = HTML(대상);
+        const 요소위치 = 대상요소.style;
+
+        // 컴퓨티드 스타일에서 현재 위치 가져오기
+        const 컴퓨티드스타일 = getComputedStyle(대상요소);
+        const 현재Left = 요소위치.left || 컴퓨티드스타일.left;
+        const 현재Bottom = 요소위치.bottom || 컴퓨티드스타일.bottom;
+
+        if (!현재Left || !현재Bottom) {
+          console.error('위치를 계산할 수 없습니다.');
+          return;
+        }
+
+        const 새로운Left = `${(parseFloat(현재Left) + x).toFixed(2)}px`;
+        const 새로운Bottom = `${(parseFloat(현재Bottom) + y).toFixed(2)}px`;
+
+        // 이동 후 새로운 위치 설정
+        요소위치.left = 새로운Left;
+        요소위치.bottom = 새로운Bottom;
+
+        // 요소 데이터 업데이트
+        if (요소[대상]) {
+          요소[대상].x = 새로운Left;
+          요소[대상].y = 새로운Bottom;
+        } else {
+          요소[대상] = { x: 새로운Left, y: 새로운Bottom, ...요소.기본형식 };
+        }
+      }
+
+      function 순간이동(대상, x, y) {
+        const 대상요소 = HTML(대상);
+        const 요소위치 = 대상요소.style;
+        요소위치.left = x;
+        요소위치.bottom = y;
+
+        // 요소 데이터 업데이트
+        if (요소[대상]) {
+          요소[대상].x = x;
+          요소[대상].y = y;
+        } else {
+          요소[대상] = { x: x, y: y, ...요소.기본형식 };
+        }
+      }
+
+      //이동('#플레이어', 100, 1);
+      //게임일반함수
+    </script>
+  </body>
+</html>
