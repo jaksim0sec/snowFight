@@ -227,7 +227,7 @@
 
       //정의
       const 시스템설정 = { 시간: { 키: 100 } };
-      const 게임설정 = { 상태: { 속도: 25 } };
+      const 게임설정 = { 상태: { 속도: 25 }, 눈덩이카운터 : 0};
       const 이미지 = {
         캐릭터: {
           정보: [
@@ -371,7 +371,7 @@
         }
       });
       document.addEventListener('mouseup', (e) => {
-  const 손 = document.querySelector('#플레이어손'); // 수정된 부분
+  const 손 = document.querySelector('#플레이어손');
   const 부모 = 손.parentElement;
 
   // 손의 현재 위치
@@ -383,10 +383,12 @@
   const 목표Y = '9%';
 
   // 눈덩이 생성
-  const 눈덩이 = document.createElement('div');
+  let 눈덩이 = document.createElement('div');
+  게임설정.눈덩이카운터++;
   눈덩이.classList.add('눈');  // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
+  눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
   document.body.appendChild(눈덩이);
-
+  눈덩이 = HTML(`눈덩이${게임설정.눈덩이카운터}`)
   // 눈덩이 초기 위치를 손의 위치로 설정
   눈덩이.style.position = 'absolute';
   눈덩이.style.left = 손.style.left;
@@ -396,39 +398,61 @@
   포물선이동(눈덩이, 목표X, 목표Y);
 });
 
-// 포물선 이동 함수 정의
-function 포물선이동(눈덩이, 목표X, 목표Y) {
-  let startTime = null;
-  const duration = 1000; // 애니메이션 시간 (1초)
+      // 게임 도움 함수
+      function 포물선이동(
+        selector,
+        targetX,
+        targetY,
+        duration = 1000,
+        interval = 16
+      ) {
+        const obj = HTML(selector);
+        obj.style.transition = ''; // 기존 transition을 비활성화하여 자연스러운 움직임
+        const startX = obj.offsetLeft,
+          startY = obj.offsetTop;
 
-  // 중력 가속도 설정
-  const gravity = 0.5;
+        // 목표값이 px인지 %인지 확인하고 처리
+        const targetXValue = targetX.endsWith('%')
+          ? (parseFloat(targetX) / 100) * window.innerWidth
+          : parseFloat(targetX);
+        const targetYValue = targetY.endsWith('%')
+          ? (parseFloat(targetY) / 100) * window.innerHeight
+          : parseFloat(targetY);
 
-  // 애니메이션을 위한 함수
-  function animate(time) {
-    if (!startTime) startTime = time;
-    const progress = (time - startTime) / duration;
+        const dx = targetXValue - startX; // x 방향 거리
+        const dy = targetYValue - startY; // y 방향 거리
+        const totalTime = duration / 1000; // 시간을 초 단위로 변환
+        const g = 9.8; // 중력 가속도 (m/s^2)
 
-    if (progress < 1) {
-      // 포물선 경로 계산
-      const t = progress;
-      const x = parseFloat(눈덩이.style.left) + (parseFloat(목표X) - parseFloat(눈덩이.style.left)) * t;
-      const y = parseFloat(눈덩이.style.bottom) + (parseFloat(목표Y) - parseFloat(눈덩이.style.bottom)) * t - gravity * t * t * 150;
+        // x 방향 속도와 y 방향 속도를 구하기 위해 필요한 비율 계산
+        const v_x = dx / totalTime; // 수평 속도
 
-      눈덩이.style.left = `${x}px`;
-      눈덩이.style.bottom = `${y}px`;
+        // 목표 Y 지점까지 정확히 도달하기 위한 초기 수직 속도 계산
+        const v_y_initial = (dy + 0.5 * g * Math.pow(totalTime, 2)) / totalTime; // 수직 속도
 
-      requestAnimationFrame(animate);
-    } else {
-      // 애니메이션 종료 후 눈 덩이 삭제
-      document.body.removeChild(눈덩이);
-    }
-  }
+        let t = 0;
 
-  // 애니메이션 시작
-  requestAnimationFrame(animate);
-}
+        const move = setInterval(() => {
+          t += interval / 1000;
 
+          if (t >= totalTime) {
+            clearInterval(move);
+            obj.style.left = `${targetXValue}px`; // 목표 X로 정확히 설정
+            obj.style.bottom = `${targetYValue}px`; // 목표 Y로 정확히 설정
+            return;
+          }
+
+          // x 좌표 계산 (등속 운동)
+          const x = startX + v_x * t;
+
+          // y 좌표 계산 (가속도 운동)
+          const y = startY + v_y_initial * t - 0.5 * g * Math.pow(t, 2);
+
+          // 객체의 위치 업데이트
+          obj.style.left = `${x}px`;
+          obj.style.bottom = `${y}px`; // 정확한 y 위치 계산
+        }, interval);
+      }
 
       function 이동(대상, x, y) {
         const 대상요소 = HTML(대상);
