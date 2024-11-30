@@ -366,17 +366,17 @@
         }
       });
       document.addEventListener('mouseup', (e) => {
-  const 손 = HTML('#플레이어손');
-  const 손위치 = getComputedStyle(손);
-  const 부모 = 손.parentElement;
+  let 손 = HTML('#플레이어손');
+  let 손위치 = getComputedStyle(손);
+  let 부모 = 손.parentElement;
 
   // 손의 현재 위치 (절대적인 위치 계산)
-  const 손AbsoluteX = e.clientX - 부모.getBoundingClientRect().left;
-  const 손AbsoluteY = e.clientY - 부모.getBoundingClientRect().top;
+  let 손AbsoluteX = e.clientX - 부모.getBoundingClientRect().left;
+  let 손AbsoluteY = e.clientY - 부모.getBoundingClientRect().top;
 
   // 클릭된 목표 위치 계산
-  const 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
-  const 목표Y = '9%';
+  let 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
+  let 목표Y = '9%';
 
   // 눈덩이 생성
   let 눈덩이 = document.createElement('div');
