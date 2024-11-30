@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>눈싸움3</title>
+    <title>눈싸움4</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <style>
@@ -387,8 +387,8 @@
   게임설정.눈덩이카운터++;
   눈덩이.classList.add('눈');  // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
   눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
-  document.body.appendChild(눈덩이);
-  눈덩이 = HTML(`눈덩이${게임설정.눈덩이카운터}`)
+  HTML('#월드').appendChild(눈덩이);
+  눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`)
   // 눈덩이 초기 위치를 손의 위치로 설정
   눈덩이.style.position = 'absolute';
   눈덩이.style.left = 손.style.left;
