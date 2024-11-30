@@ -366,7 +366,8 @@
         }
       });
       document.addEventListener('mouseup', (e) => {
-  const 손 = document.querySelector('#플레이어손');
+  const 손 = HTML('#플레이어손');
+  const 손위치 = getComputedStyle(손);
   const 부모 = 손.parentElement;
 
   // 손의 현재 위치
@@ -386,8 +387,8 @@
   눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`)
   // 눈덩이 초기 위치를 손의 위치로 설정
   눈덩이.style.position = 'absolute';
-  눈덩이.style.left = 손.style.left;
-  눈덩이.style.bottom = 손.style.bottom;
+  눈덩이.style.left = 손위치.style.left;
+  눈덩이.style.bottom = 손위치.style.bottom;
   눈덩이.style.border = '1px solid black';
 
   // 포물선 이동 함수 적용
