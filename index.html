@@ -94,6 +94,21 @@
         background: white;
       }
 
+      .눈 {
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        left: calc(50% - 30px);
+        bottom: calc(10% + 25px);
+        transform: translateX(-50%) scaleX(-1);
+        display: flex;
+        justify-content: center;
+        transition: all 0.6s cubic-bezier(0.5, 0.8, 0.3, 1);
+        border-radius: 50%;
+        /*border: 1.5px solid black;*/
+        background: white;
+      }
+
       #플레이어 img {
         width: 100%;
         position: absolute;
@@ -356,17 +371,30 @@
         }
       });
       document.addEventListener('mouseup', (e) => {
-        const 손 = HTML('#플레이어손');
-        const 부모 = 손.parentElement;
+  const 손 = document.querySelector('#플레이어손');
+  const 부모 = 손.parentElement;
 
-        const 원래X = 손.style.left;
-        const 원래Y = 손.style.bottom;
+  // 손의 현재 위치
+  const 원래X = 손.style.left;
+  const 원래Y = 손.style.bottom;
 
-        const 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
-        const 목표Y = '9%';
+  // 클릭된 목표 위치 계산
+  const 목표X = e.clientX - 부모.getBoundingClientRect().left + 'px';
+  const 목표Y = '9%';
 
-        포물선이동('#플레이어손', 목표X, 목표Y);
-      });
+  // 눈덩이 생성
+  const 눈덩이 = document.createElement('div');
+  눈덩이.classList.add('눈');  // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
+  document.body.appendChild(눈덩이);
+
+  // 눈덩이 초기 위치를 손의 위치로 설정
+  눈덩이.style.position = 'absolute';
+  눈덩이.style.left = 손.style.left;
+  눈덩이.style.bottom = 손.style.bottom;
+
+  // 포물선 이동 함수 적용
+  포물선이동(눈덩이, 목표X, 목표Y);
+});
 
       // 게임 도움 함수
       function 포물선이동(
