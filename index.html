@@ -21,11 +21,20 @@
         height: 90vh;
         border: none;
         border-radius: 10px;
-        box-shadow: inset -8px -8px 5px #00000050, inset 8px 8px #ffffff30;
         background: linear-gradient(to bottom, #CDFFF5, #B8DCD4, #E8FBFF);
 ;
         overflow: hidden;
         position: relative;
+      }
+
+      #그림자{
+        width: 95vw;
+        height: 90vh;
+        border: none;
+        border-radius: 10px;
+        box-shadow: inset -8px -8px 5px #00000050, inset 8px 8px #ffffff30;
+        pointer-events: none;
+        position: absolute;
       }
 
       #보드 * {
@@ -50,7 +59,7 @@
         width: 100%;
         height: 10%;
         display: flex;
-        background: linear-gradient(to bottom, #FFF9F1, #FFFFFF);
+        background: linear-gradient(to bottom, #fbe7c9, #FFFFFF);
         border-radius: 5px;
       }
 
@@ -111,7 +120,7 @@
 
       .판 {
         width: 50px;
-        height: 50px;
+        height: 70px;
         left: calc(50% - 25px);
         border: 1px solid black;
       }
@@ -149,6 +158,7 @@
       </div>
       <div id="플레이어손" class="오브젝트"></div>
     </div>
+    <div id="그림자"></div>
 
     <script>
       //기본함수팩
