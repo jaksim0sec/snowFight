@@ -392,23 +392,28 @@
       document.addEventListener('mouseup', async function (e) {
         const 손 = HTML('#플레이어손');
         const 손이전 = HTML('#플레이어손').style.left;
-        const 손위치 = 손.getBoundingClientRect();
+        let 손위치 = 손.getBoundingClientRect();
         //if(e.clientX>손위치.left){alert('dd')}
         await 순간이동(
+          '#플레이어손',
+          손위치.left,
+          'calc(10% - 50px)'
+        );
+
+        setTimeout(() => {
+          순간이동(
           '#플레이어손',
           e.clientX > 손위치.left
             ? 'calc(50% - 15px + 40px)'
             : 'calc(50% - 15px - 40px)',
           'calc(10% + 50px)'
         );
-
-        setTimeout(() => {
+        const 손Y = getComputedStyle(손).bottom;
           const 월드 = HTML('#월드');
           const 월드위치 = 월드.getBoundingClientRect();
           const 손X = 손위치.left - 월드위치.left;
-          const 손Y = 손위치.bottom - 월드위치.bottom;
           const 목표X = e.clientX - 월드위치.left + 'px';
-          const 목표Y = '9%'; // 상대적 목표 Y 위치 (9%)
+          //const 목표Y = '9%';
 
           // 눈덩이 생성
           let 눈덩이 = document.createElement('div');
@@ -420,12 +425,18 @@
 
           // 눈덩이 초기 위치를 손의 절대적 위치로 설정 (월드의 상대적 위치로 변환)
           눈덩이.style.position = 'absolute';
-          눈덩이.style.left = 손X + 'px'; // 월드 내의 상대적 X 좌표 사용
-          눈덩이.style.bottom = 손Y + 'px'; // 월드 내의 상대적 Y 좌표 사용 (bottom 사용)
+          눈덩이.style.left = 손X + 'px';
+          눈덩이.style.bottom = '10%';
+          //let ㅌ = parseInt(getComputedStyle(눈덩이).bottom);
+          //alert(ㅌ)
           //눈덩이.style.border = '1px solid black';
-
           // 포물선 이동 함수 적용
-          포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 목표Y);
+          const 반복함수 = [
+            function(){if(터치('.판',`#눈덩이${게임설정.눈덩이카운터}`)){return 'stop';}}
+            //,function(){console.log('테스트')}
+          ]
+          const 강도 = ((요소['#플레이어'].상태 == '숙캐릭터')?3:10);
+          포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 1000, 강도,반복함수);
         }, 100);
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
@@ -433,59 +444,49 @@
       });
 
       // 게임 도움 함수
-      function 포물선이동(
-        selector,
-        targetX,
-        targetY,
-        duration = 1000,
-        interval = 16
-      ) {
-        const obj = HTML(selector);
-        obj.style.transition = '';
-        const startX = obj.offsetLeft,
-          startY = obj.offsetTop;
-
-        // 목표값이 px인지 %인지 확인하고 처리
-        const targetXValue = targetX.endsWith('%')
-          ? (parseFloat(targetX) / 100) * window.innerWidth
-          : parseFloat(targetX);
-        const targetYValue = targetY.endsWith('%')
-          ? (parseFloat(targetY) / 100) * window.innerHeight
-          : parseFloat(targetY);
-
-        const dx = targetXValue - startX; // x 방향 거리
-        const dy = targetYValue - startY; // y 방향 거리
-        const totalTime = duration / 1000; // 시간을 초 단위로 변환
-        const g = 9.8; // 중력 가속도 (m/s^2)
-
-        // x 방향 속도와 y 방향 속도를 구하기 위해 필요한 비율 계산
-        const v_x = dx / totalTime; // 수평 속도
-
-        // 목표 Y 지점까지 정확히 도달하기 위한 초기 수직 속도 계산
-        const v_y_initial = (dy + 0.5 * g * Math.pow(totalTime, 2)) / totalTime; // 수직 속도
-
-        let t = 0;
-
-        const move = setInterval(() => {
-          t += interval / 1000;
-
-          if (t >= totalTime) {
-            clearInterval(move);
-            obj.style.left = `${targetXValue}px`; // 목표 X로 정확히 설정
-            obj.style.bottom = `${targetYValue}px`; // 목표 Y로 정확히 설정 (bottom 사용)
-            return;
+      function 포물선이동(대상, X, 시간, 강도, 함수목록) {
+        const 옵 = HTML(대상);
+        옵.style.transition = 'none';
+        let 옵위 = getComputedStyle(옵);
+        let 원x = parseInt(옵위.left);
+        let 원y = parseInt(옵위.bottom);
+        옵.style.bottom = 원y + 'px';
+        //alert(원y)
+        const 목x = X.endsWith('%')
+          ? (parseFloat(X) / 100) * window.innerWidth
+          : parseFloat(X);
+        let 거리 = 목x - 원x;
+        let 주기 = 10;
+        const 횟수 = 시간/주기
+        //console.log('횟수',횟수)
+        FEk = 강도; //기본값 5 -> 0.1*(횟수/2)
+        const g = FEk/횟수*2 //FEk/횟수*2 //9.8/3 //실제 세상의 3라고 가정
+        //console.log('g',g)
+        //console.log('calc',g*횟수)
+        //console.log(FEk)
+        MaxEp = 100;
+        let x = 거리/(횟수);
+        let y = FEk;
+        //console.log('FEK',FEk);
+        //단위 px
+        let 테스트 = [0,0]
+        let 카운터 = 0;
+        const 포물선운동 = setInterval(()=>{
+          카운터++
+          y -= g;
+          //y = y.toFixed(4) 
+          //console.log(g*카운터)
+          이동(대상,x,y);
+          for(var i = 0; i<함수목록.length; i++){
+            if(함수목록[i]() == 'stop'){clearInterval(포물선운동);}
+            함수목록[i]();
           }
-
-          // x 좌표 계산 (등속 운동)
-          const x = startX + v_x * t;
-
-          // y 좌표 계산 (가속도 운동)
-          const y = startY + v_y_initial * t - 0.5 * g * Math.pow(t, 2);
-
-          // 객체의 위치 업데이트
-          obj.style.left = `${x}px`;
-          obj.style.bottom = `${y}px`; // 정확한 y 위치 계산 (bottom 사용)
-        }, interval);
+          //if(y>0){테스트[0]+=y}
+          //else{테스트[1]-=y}
+          //console.log(카운터 , 원y,parseInt(getComputedStyle(옵).bottom) , 테스트)
+          if(카운터+2>횟수){
+            clearInterval(포물선운동);}
+        },주기);
       }
 
       function 이동(대상, x, y) {
