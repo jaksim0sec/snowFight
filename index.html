@@ -159,8 +159,8 @@
 
       .기관총 {
         border: 1px solid black;
-        width: 50px;
-        height: 50px;
+        width: 100px;
+        height: 100px;
       }
 
       #아군기관총 {
@@ -252,7 +252,7 @@
 
       //정의
       const 시스템설정 = { 시간: { 키: 100 } };
-      const 게임설정 = { 상태: { 속도: 25 }, 눈덩이카운터: 0 };
+      const 게임설정 = { 상태: { 속도: 25 }, 눈덩이카운터: 0, 기관총카운터:{적군:0, 아군: 0} };
       const 이미지 = {
         캐릭터: {
           정보: ['w1.png', 'w2.png', 'w3.png'],
@@ -343,6 +343,9 @@
                 이미지[요소['#플레이어'].상태].카운터
               ];
           },
+          haveAll: function (){
+            
+          }
         },
         키종료: {
           a: function () {
@@ -360,7 +363,7 @@
         },
       };
 
-      let 순환 = { 키: {} };
+      let 순환 = { 키: {} , 총알: {}, 요청성반복: {}};
       let 요소 = {
         기본형식: { hp: 0 },
         '#플레이어': {
@@ -369,12 +372,15 @@
           상태: '캐릭터',
         },
       };
+
+      let 관리소규모요소 = [];
       //입력관리
       document.addEventListener('keydown', (e) => {
         const key = e.key;
         if (!순환.키[key] && 함수.키[key]) {
           순환.키[key] = setInterval(() => {
             함수.키[key]();
+            함수.키.haveAll();
           }, 시스템설정.시간.키);
         }
       });
@@ -436,7 +442,7 @@
             function(){if(터치('.판',`#눈덩이${게임설정.눈덩이카운터}`)){return 'stop';}}
             //,function(){console.log('테스트')}
           ]
-          const 강도 = ((요소['#플레이어'].상태 == '숙캐릭터')?3:랜덤(8,10));
+          const 강도 = ((요소['#플레이어'].상태 == '숙캐릭터')?랜덤(1,5):랜덤(10,15));
           포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 800, 강도,반복함수);
         }, 100);
         setTimeout(() => {
@@ -537,6 +543,52 @@
 
       //이동('#플레이어', 100, 1);
       //게임일반함수
+
+      function 전체반복관리(){
+        const 관리자 = setInterval(()=>{
+          let 기관총감지 = (HTML('#적군기관총').getBoundingClientRect().left - HTML('body').getBoundingClientRect().width/2) < 400;
+            //console.log(기관총감지)
+            if(기관총감지){
+              //HTML('#적군기관총').style.backgroundColor = '#000000';
+              //HTML('body').style.backgroundColor = 'red';
+              //console.log('왜 안되는거지 시발');
+              //순환.요청성반복['총알'] = 
+              //{함수:
+              
+              const 월드 = HTML('#월드');
+              const 월드위치 = 월드.getBoundingClientRect();
+              const 기관총X = HTML('#적군기관총').getBoundingClientRect().left - 월드위치.left;
+              let 총알 = document.createElement('div');
+              게임설정.기관총카운터.적군++;
+              총알.classList.add('눈'); // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
+              총알.id = `총알${게임설정.기관총카운터.적군}`;
+              HTML('#월드').appendChild(총알);
+              관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
+              총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
+              총알.style.bottom = 'calc(10% + 50px)';
+              총알.style.left = 기관총X +50+ 'px';
+            }
+              //순환.총알[`총알${게임설정.기관총카운터.적군}`] = setTimeout(()=>{
+              //  이동(`#총알${게임설정.기관총카운터.적군}`,-10,-2)
+              //},10)
+              //포물선이동(`#총알${게임설정.기관총카운터.적군}`,'50%',1000,10,[])
+            //,}}
+
+
+          for(var i = 0; i<관리소규모요소.length; i++){
+            const 대상 =  관리소규모요소[i];
+            이동(대상, -50, 0);
+            if(터치('#플레이어',대상)){관리소규모요소.splice(i,1); i--; HTML(대상).remove();continue}
+            //포물선이동(대상, '50%', 1000, 10, [])
+          }
+          for(var i = 0; i<Object.keys(순환.요청성반복).length; i++){
+            //setTimeout((i)=>{순환.요청성반복[Object.keys(순환.요청성반복)[i]].함수()},500)
+            순환.요청성반복[Object.keys(순환.요청성반복)[i]].함수()
+          }
+        },100)
+      }
+
+      전체반복관리();
     </script>
   </body>
 </html>
