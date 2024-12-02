@@ -580,7 +580,7 @@
           for(var i = 0; i<관리소규모요소.length; i++){
             const 대상 =  관리소규모요소[i];
             이동(대상, -50, 0);
-            if(터치('#플레이어',대상)){관리소규모요소.splice(i,1); i--; HTML(대상).remove();continue}
+            if(터치('#플레이어 img',대상)){관리소규모요소.splice(i,1); i--; HTML(대상).remove();continue}
             //포물선이동(대상, '50%', 1000, 10, [])
           }
           for(var i = 0; i<Object.keys(순환.요청성반복).length; i++){
