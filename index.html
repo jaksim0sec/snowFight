@@ -412,7 +412,8 @@
           const 월드 = HTML('#월드');
           const 월드위치 = 월드.getBoundingClientRect();
           const 손X = 손위치.left - 월드위치.left;
-          const 목표X = e.clientX - 월드위치.left + 'px';
+          let 목표X = e.clientX - 월드위치.left + 'px';
+          if(Math.abs(e.clientX - 월드위치.left)>Math.abs(손X)+400){목표X = 손X+400*(손X/Math.abs(손X))+'px'}
           //const 목표Y = '9%';
 
           // 눈덩이 생성
@@ -435,8 +436,8 @@
             function(){if(터치('.판',`#눈덩이${게임설정.눈덩이카운터}`)){return 'stop';}}
             //,function(){console.log('테스트')}
           ]
-          const 강도 = ((요소['#플레이어'].상태 == '숙캐릭터')?3:10);
-          포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 750, 강도,반복함수);
+          const 강도 = ((요소['#플레이어'].상태 == '숙캐릭터')?3:랜덤(8,10));
+          포물선이동(`#눈덩이${게임설정.눈덩이카운터}`, 목표X, 800, 강도,반복함수);
         }, 100);
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
