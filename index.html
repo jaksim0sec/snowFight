@@ -167,7 +167,7 @@
         left: calc(50% - 25px - 250px);
       }
       #적군기관총 {
-        right: calc(50% - 25px - 250px);
+        right: calc(50% - 25px - 300px);
       }
 
       #플레이어체력{
@@ -546,7 +546,7 @@
 
       function 전체반복관리(){
         const 관리자 = setInterval(()=>{
-          let 기관총감지 = (HTML('#적군기관총').getBoundingClientRect().left - HTML('body').getBoundingClientRect().width/2) < 400;
+          let 기관총감지 = (HTML('#적군기관총').getBoundingClientRect().left - HTML('body').getBoundingClientRect().width/2) < 500;
             //console.log(기관총감지)
             if(기관총감지){
               //HTML('#적군기관총').style.backgroundColor = '#000000';
@@ -566,8 +566,8 @@
               관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
               총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
               총알.style.bottom = 'calc(10% + 80px)';
-              총알.style.width='15px';
-              총알.style.height='15px';
+              총알.style.width='10px';
+              총알.style.height='10px';
               총알.style.left = 기관총X +50+ 'px';
             }
               //순환.총알[`총알${게임설정.기관총카운터.적군}`] = setTimeout(()=>{
