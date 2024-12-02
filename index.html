@@ -598,7 +598,7 @@
               HTML('#월드').appendChild(총알);
               관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
               총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
-              총알.style.bottom = 'calc(10% + 92px)';
+              총알.style.bottom = 'calc(10% + 95px)';
               총알.style.width = '10px';
               총알.style.height = '10px';
               총알.style.left = 기관총X + 50 + 'px';
@@ -614,7 +614,7 @@
 
           for (var i = 0; i < 관리소규모요소.length; i++) {
             const 대상 = 관리소규모요소[i];
-            이동(대상, -20, 0);
+            이동(대상, -20, -0.5);
             if (터치('#플레이어 img', 대상)) {
               관리소규모요소.splice(i, 1);
               i--;
