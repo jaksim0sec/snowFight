@@ -565,7 +565,9 @@
               HTML('#월드').appendChild(총알);
               관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
               총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
-              총알.style.bottom = 'calc(10% + 75px)';
+              총알.style.bottom = 'calc(10% + 80px)';
+              총알.style.width='15px';
+              총알.style.height='15px';
               총알.style.left = 기관총X +50+ 'px';
             }
               //순환.총알[`총알${게임설정.기관총카운터.적군}`] = setTimeout(()=>{
