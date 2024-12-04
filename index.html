@@ -42,7 +42,7 @@
       }
 
       #월드 {
-        width: 1800px;
+        width: 1300px;
         height: 100%;
         position: absolute;
         bottom: 0px;
@@ -162,7 +162,7 @@
       }
 
       .기관총 {
-        border: 1px solid black;
+        /*border: 1px solid black;*/
         width: 300px;
         height: 210px;
       }
@@ -448,7 +448,7 @@
           const 월드 = HTML('#월드');
           const 월드위치 = 월드.getBoundingClientRect();
           const 손X = 손위치.left - 월드위치.left;
-          let 목표X = e.clientX - 월드위치.left + 'px';
+          let 목표X = e.clientX - 월드위치.left + 랜덤(-5,5) + 'px';
           if (Math.abs(e.clientX - 월드위치.left) > Math.abs(손X) + 400) {
             목표X = 손X + 400 * (손X / Math.abs(손X)) + 'px';
           }
