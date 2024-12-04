@@ -448,7 +448,7 @@
           const 월드 = HTML('#월드');
           const 월드위치 = 월드.getBoundingClientRect();
           const 손X = 손위치.left - 월드위치.left;
-          let 목표X = e.clientX - 월드위치.left + 랜덤(-5,5) + 'px';
+          let 목표X = e.clientX - 월드위치.left + 랜덤(-15,15) + 'px';
           if (Math.abs(e.clientX - 월드위치.left) > Math.abs(손X) + 400) {
             목표X = 손X + 400 * (손X / Math.abs(손X)) + 'px';
           }
@@ -621,7 +621,7 @@
                   관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
                   총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
                   const 총알높이계산 =
-                    (HTML('body').getBoundingClientRect().height / 10 + 135)*(21/20);
+                    (HTML('body').getBoundingClientRect().height / 10 + 138);
                   총알.style.bottom = 총알높이계산 + 'px';
                   총알.style.width = '8px';
                   총알.style.height = '8px';
