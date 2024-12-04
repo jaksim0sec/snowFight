@@ -550,8 +550,8 @@
           이동(대상, x, y);
           for (var i = 0; i < 함수목록.length; i++) {
             if (함수목록[i]() == 'stop') {
+              await 종료함수();
               clearInterval(포물선운동);
-              종료함수();
             }
             함수목록[i]();
           }
@@ -559,8 +559,8 @@
           //else{테스트[1]-=y}
           //console.log(카운터 , 원y,parseInt(getComputedStyle(옵).bottom) , 테스트)
           if (카운터 + 2 > 횟수) {
+            await 종료함수();
             clearInterval(포물선운동);
-            종료함수();
           }
         }, 주기);
       }
