@@ -608,7 +608,7 @@
               총알.style.bottom = 'calc(10% + 140px)';
               총알.style.width = '10px';
               총알.style.height = '10px';
-              총알.style.left = 기관총X + 15 + 'px';
+              총알.style.left = 기관총X + 0 + 'px';
             },i*100)
             }
             setTimeout(()=>{변수.재장전.적군기관총 = true;},1500)
@@ -621,7 +621,7 @@
 
           for (var i = 0; i < 관리소규모요소.length; i++) {
             const 대상 = 관리소규모요소[i];
-            이동(대상, -25, -1.5);
+            이동(대상, -25, -15);
             if (터치('#플레이어 img', 대상)) {
               관리소규모요소.splice(i, 1);
               i--;
