@@ -590,7 +590,7 @@
             //{함수:
             if(변수.재장전.적군기관총){
               변수.재장전.적군기관총 = false;
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 4; i++) {
               setTimeout(()=>{
               //console.log('시발')
               const 월드 = HTML('#월드');
@@ -628,6 +628,7 @@
               관리소규모요소.splice(i, 1);
               i--;
               HTML(대상).remove();
+              console.log('캐릭터 체력 감소 함수 실행 필요')
               continue;
             }
             if (!터치('#월드', 대상)) {
