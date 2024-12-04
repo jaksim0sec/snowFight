@@ -157,7 +157,7 @@
 
       .판 {
         width: 20px;
-        height: 84px;
+        height: 80px;
         left: calc(50% - 10px);
         border: 1px solid black;
       }
@@ -166,14 +166,14 @@
         /*border: 1px solid black;*/
         width: 250px;
         min-height: 210px;
-        display:flex;
-        flex-direction: column
+        display: flex;
+        flex-direction: column;
       }
 
       .기관총 img {
         height: auto;
         width: 100%;
-        margin-top: auto
+        margin-top: auto;
         /*border: 1px solid black;*/
       }
 
@@ -504,23 +504,21 @@
 
           const 종료함수 = function () {
             if (터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)) {
-              //console.log('횟수체크용')
-              //console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
               HTML('#적군기관총').style.filter = 'brightness(1.5)';
               요소['#적군기관총'].체력 -= 10;
               HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
-              if(요소['#적군기관총'].체력 < 0){HTML('#적군기관총 img').src = 'G1D.png';}
+
+              if (요소['#적군기관총'].체력 < 0) {
+                HTML('#적군기관총 img').src = 'G1D.png';
+                요소['#적군기관총'].체력 = 0;
+              }
+
               setTimeout(() => {
-                if(요소['#적군기관총'].체력<0){
-                  HTML('#적군기관총 img').src = 'G1D.png';
-                  요소['#적군기관총'].체력 = 0;
-                  //HTML('#적군기관총 img').style.transition = 'none';
-                  //HTML('#적군기관총 img').style.height = '98%';
-                }
                 HTML('#적군기관총').style.filter = '';
               }, 200);
             }
           };
+
           const 강도 =
             요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 25);
           await 포물선이동(
@@ -644,7 +642,9 @@
               HTML('body').getBoundingClientRect().width / 2 <
             500;
           //console.log(기관총감지)
-          if (요소['#적군기관총'].체력 === 0){변수.재장전.적군기관총 = false;}
+          if (요소['#적군기관총'].체력 === 0) {
+            변수.재장전.적군기관총 = false;
+          }
           if (기관총감지) {
             //HTML('#적군기관총').style.backgroundColor = '#000000';
             //HTML('body').style.backgroundColor = 'red';
@@ -693,7 +693,9 @@
             //console.log('시발 왜 안내려감')
             if (터치('#땅', 대상)) {
               관리소규모요소.splice(i, 1);
-              if(요소[대상]){delete 요소[대상]}
+              if (요소[대상]) {
+                delete 요소[대상];
+              }
               i--;
               HTML(대상).remove();
               continue;
@@ -701,7 +703,9 @@
 
             if (터치('#플레이어 img', 대상)) {
               관리소규모요소.splice(i, 1);
-              if(요소[대상]){delete 요소[대상]}
+              if (요소[대상]) {
+                delete 요소[대상];
+              }
               i--;
               HTML(대상).remove();
               //console.log('캐릭터 체력 감소 함수 실행 필요');
@@ -713,7 +717,9 @@
             }
             if (!터치('#월드', 대상)) {
               관리소규모요소.splice(i, 1);
-              if(요소[대상]){delete 요소[대상]}
+              if (요소[대상]) {
+                delete 요소[대상];
+              }
               i--;
               HTML(대상).remove();
               continue;
@@ -721,7 +727,9 @@
 
             if (터치('.판', 대상)) {
               관리소규모요소.splice(i, 1);
-              if(요소[대상]){delete 요소[대상]}
+              if (요소[대상]) {
+                delete 요소[대상];
+              }
               i--;
               HTML(대상).remove();
               continue;
