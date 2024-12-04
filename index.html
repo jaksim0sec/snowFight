@@ -157,7 +157,7 @@
 
       .판 {
         width: 20px;
-        height: 85px;
+        height: 84px;
         left: calc(50% - 10px);
         border: 1px solid black;
       }
@@ -166,13 +166,14 @@
         /*border: 1px solid black;*/
         width: 250px;
         min-height: 210px;
+        display:flex;
+        flex-direction: column
       }
 
       .기관총 img {
         height: auto;
         width: 100%;
-        position: absolute;
-        bottom: 10%;
+        margin-top: auto
         /*border: 1px solid black;*/
       }
 
@@ -508,7 +509,7 @@
               HTML('#적군기관총').style.filter = 'brightness(1.5)';
               요소['#적군기관총'].체력 -= 10;
               HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
-              if(요소['#적군기관총체'].체력 < 0){HTML('#적군기관총 img').src = 'G1D.png';}
+              if(요소['#적군기관총'].체력 < 0){HTML('#적군기관총 img').src = 'G1D.png';}
               setTimeout(() => {
                 if(요소['#적군기관총'].체력<0){
                   HTML('#적군기관총 img').src = 'G1D.png';
