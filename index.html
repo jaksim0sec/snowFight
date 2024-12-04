@@ -492,7 +492,7 @@
 
           const 종료함수 = function(){
             if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
-            console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
+            //console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
             HTML('#적군기관총').style.filter = 'brightness(1.5)';
             setTimeout(()=>{HTML('#적군기관총').style.filter = '';},200)
           }
@@ -542,7 +542,7 @@
         //단위 px
         let 테스트 = [0, 0];
         let 카운터 = 0;
-        const 포물선운동 = setInterval(() => {
+        const 포물선운동 = setInterval(async function(){
           카운터++;
           y -= g;
           //y = y.toFixed(4)
@@ -551,7 +551,7 @@
           for (var i = 0; i < 함수목록.length; i++) {
             if (함수목록[i]() == 'stop') {
               clearInterval(포물선운동);
-              종료함수()
+              종료함수();
             }
             함수목록[i]();
           }
@@ -560,7 +560,7 @@
           //console.log(카운터 , 원y,parseInt(getComputedStyle(옵).bottom) , 테스트)
           if (카운터 + 2 > 횟수) {
             clearInterval(포물선운동);
-            종료함수()
+            종료함수();
           }
         }, 주기);
       }
