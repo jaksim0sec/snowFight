@@ -456,7 +456,7 @@
           const 월드 = HTML('#월드');
           const 월드위치 = 월드.getBoundingClientRect();
           const 손X = 손위치.left - 월드위치.left;
-          let 목표X = e.clientX - 월드위치.left + 랜덤(-15,15) + 'px';
+          let 목표X = e.clientX - 월드위치.left + 랜덤(-30,30) + 'px';
           if (Math.abs(e.clientX - 월드위치.left) > Math.abs(손X) + 400) {
             목표X = 손X + 400 * (손X / Math.abs(손X)) + 'px';
           }
@@ -483,11 +483,14 @@
               if (터치('.판', `#눈덩이${게임설정.눈덩이카운터}`)) {
                 return 'stop';
               }
+              if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
+                return 'stop';
+              }
             },
             //,function(){console.log('테스트')}
           ];
           const 강도 =
-            요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 15);
+            요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 25);
           포물선이동(
             `#눈덩이${게임설정.눈덩이카운터}`,
             목표X,
