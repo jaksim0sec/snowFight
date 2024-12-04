@@ -511,7 +511,8 @@
                 HTML('#적군기관총').style.filter = '';
                 if(요소['#적군기관총'].체력<0){
                   요소['#적군기관총'].체력 = 0;
-                  HTML('#적군기관총').src = 'G1D.png';
+                  HTML('#적군기관총 img').src = 'G1D.png';
+                  HTML('#적군기관총 img').style.height = '95%';
                 }
               }, 200);
             }
@@ -687,6 +688,7 @@
             //console.log('시발 왜 안내려감')
             if (터치('#땅', 대상)) {
               관리소규모요소.splice(i, 1);
+              if(요소[대상]){delete 요소[대상]}
               i--;
               HTML(대상).remove();
               continue;
@@ -694,6 +696,7 @@
 
             if (터치('#플레이어 img', 대상)) {
               관리소규모요소.splice(i, 1);
+              if(요소[대상]){delete 요소[대상]}
               i--;
               HTML(대상).remove();
               //console.log('캐릭터 체력 감소 함수 실행 필요');
@@ -705,6 +708,7 @@
             }
             if (!터치('#월드', 대상)) {
               관리소규모요소.splice(i, 1);
+              if(요소[대상]){delete 요소[대상]}
               i--;
               HTML(대상).remove();
               continue;
@@ -712,6 +716,7 @@
 
             if (터치('.판', 대상)) {
               관리소규모요소.splice(i, 1);
+              if(요소[대상]){delete 요소[대상]}
               i--;
               HTML(대상).remove();
               continue;
