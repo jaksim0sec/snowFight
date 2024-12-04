@@ -411,10 +411,10 @@
         if (순환.키[key]) {
           await clearInterval(순환.키[key]);
           delete 순환.키[key];
-          if (함수.키종료[key]) {
+        }
+         if (함수.키종료[key]) {
             함수.키종료[key]();
           }
-        }
       });
       document.addEventListener('mouseup', async function (e) {
         const 손 = HTML('#플레이어손');
