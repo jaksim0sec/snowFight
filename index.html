@@ -42,7 +42,7 @@
       }
 
       #월드 {
-        width: 1700px;
+        width: 2000px;
         height: 100%;
         position: absolute;
         bottom: 0px;
@@ -197,7 +197,7 @@
           <div class="영역">ㅈ</div>
         </div>
         <div class="오브젝트 기지" id="아군기지">아군기지</div>
-        <div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>
+        <!--<div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>-->
         <div class="오브젝트 판">판</div>
         <div class="오브젝트 기관총" id="적군기관총"><img src="G1O.png" /></div>
         <div class="오브젝트 기지" id="적군기지">적군기지</div>
@@ -444,7 +444,7 @@
         //if(e.clientX>손위치.left){alert('dd')}
         await 순간이동('#플레이어손', 손위치.left, 'calc(10% - 50px)');
 
-        setTimeout(() => {
+        setTimeout(async function(){
           순간이동(
             '#플레이어손',
             e.clientX > 손위치.left
@@ -483,21 +483,25 @@
               if (터치('.판', `#눈덩이${게임설정.눈덩이카운터}`)) {
                 return 'stop';
               }
-              if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
+              /*if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
                 return 'stop';
-              }
+              }*/
             },
             //,function(){console.log('테스트')}
           ];
           const 강도 =
             요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 25);
-          포물선이동(
+          await 포물선이동(
             `#눈덩이${게임설정.눈덩이카운터}`,
             목표X,
             800,
             강도,
             반복함수
           );
+          if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
+            HTML('#적군기관총').style.filter = 'brightness(1.5)';
+            setTimeout(()=>{HTML('#적군기관총').style.filter = '';},200)
+          }
         }, 100);
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
