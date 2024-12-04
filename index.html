@@ -153,7 +153,7 @@
 
       .판 {
         width: 50px;
-        height: 80px;
+        height: 90px;
         left: calc(50% - 25px);
         border: 1px solid black;
       }
@@ -607,8 +607,8 @@
               총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
               const 총알높이계산 = (HTML('body').getBoundingClientRect().height)/10 + 140;
               총알.style.bottom = 총알높이계산 + 'px';
-              총알.style.width = '5px';
-              총알.style.height = '5px';
+              총알.style.width = '8px';
+              총알.style.height = '8px';
               총알.style.left = 기관총X + 0 + 'px';
             },i*100)
             }
