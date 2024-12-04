@@ -605,7 +605,7 @@
               HTML('#월드').appendChild(총알);
               관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
               총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
-              const 총알높이계산 = (HTML('body').getBoundingClientRect().height)/10 + 140;
+              const 총알높이계산 = (HTML('body').getBoundingClientRect().height)/10 + 135;
               총알.style.bottom = 총알높이계산 + 'px';
               총알.style.width = '8px';
               총알.style.height = '8px';
@@ -631,6 +631,13 @@
               continue;
             }
             if (!터치('#월드', 대상)) {
+              관리소규모요소.splice(i, 1);
+              i--;
+              HTML(대상).remove();
+              continue;
+            }
+
+             if (터치('.판', 대상)) {
               관리소규모요소.splice(i, 1);
               i--;
               HTML(대상).remove();
