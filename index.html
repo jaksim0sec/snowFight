@@ -489,6 +489,14 @@
             },
             //,function(){console.log('테스트')}
           ];
+
+          const 종료함수 = function(){
+            if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
+            console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
+            HTML('#적군기관총').style.filter = 'brightness(1.5)';
+            setTimeout(()=>{HTML('#적군기관총').style.filter = '';},200)
+          }
+          }
           const 강도 =
             요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 25);
           await 포물선이동(
@@ -496,12 +504,10 @@
             목표X,
             800,
             강도,
-            반복함수
+            반복함수,
+            종료함수
           );
-          if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
-            HTML('#적군기관총').style.filter = 'brightness(1.5)';
-            setTimeout(()=>{HTML('#적군기관총').style.filter = '';},200)
-          }
+          //console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
         }, 100);
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
@@ -509,7 +515,7 @@
       });
 
       // 게임 도움 함수
-      function 포물선이동(대상, X, 시간, 강도, 함수목록) {
+      function 포물선이동(대상, X, 시간, 강도, 함수목록, 종료함수) {
         const 옵 = HTML(대상);
         옵.style.transition = 'none';
         let 옵위 = getComputedStyle(옵);
@@ -545,6 +551,7 @@
           for (var i = 0; i < 함수목록.length; i++) {
             if (함수목록[i]() == 'stop') {
               clearInterval(포물선운동);
+              종료함수()
             }
             함수목록[i]();
           }
@@ -553,6 +560,7 @@
           //console.log(카운터 , 원y,parseInt(getComputedStyle(옵).bottom) , 테스트)
           if (카운터 + 2 > 횟수) {
             clearInterval(포물선운동);
+            종료함수()
           }
         }, 주기);
       }
