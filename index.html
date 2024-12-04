@@ -171,7 +171,9 @@
       .기관총 img {
         height: auto;
         width: 100%;
-        margin-top: auto;
+        position: absolute;
+        bottom: 10%;
+        transform: translateY(-50%);
         /*border: 1px solid black;*/
       }
 
@@ -507,11 +509,12 @@
               HTML('#적군기관총').style.filter = 'brightness(1.5)';
               요소['#적군기관총'].체력 -= 10;
               HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
+              if(요소['#적군기관총체'].체력 < 0){HTML('#적군기관총 img').src = 'G1D.png';}
               setTimeout(() => {
                 if(요소['#적군기관총'].체력<0){
-                  요소['#적군기관총'].체력 = 0;
                   HTML('#적군기관총 img').src = 'G1D.png';
-                  HTML('#적군기관총 img').style.transition = 'none';
+                  요소['#적군기관총'].체력 = 0;
+                  //HTML('#적군기관총 img').style.transition = 'none';
                   //HTML('#적군기관총 img').style.height = '98%';
                 }
                 HTML('#적군기관총').style.filter = '';
