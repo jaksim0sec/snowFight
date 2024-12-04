@@ -164,7 +164,7 @@
       .기관총 {
         border: 1px solid black;
         width: 300px;
-        height: 200px;
+        height: 210px;
       }
 
       .기관총 img {
@@ -621,11 +621,11 @@
                   관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
                   총알 = HTML(`#총알${게임설정.기관총카운터.적군}`);
                   const 총알높이계산 =
-                    HTML('body').getBoundingClientRect().height / 10 + 135;
+                    (HTML('body').getBoundingClientRect().height / 10 + 135)*(21/20);
                   총알.style.bottom = 총알높이계산 + 'px';
                   총알.style.width = '8px';
                   총알.style.height = '8px';
-                  총알.style.left = 기관총X + 0 + 'px';
+                  총알.style.left = 기관총X -4 + 'px';
                 }, i * 100);
               }
               setTimeout(() => {
