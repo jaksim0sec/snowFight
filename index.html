@@ -583,7 +583,7 @@
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
         }, 500);
-        setTimeout(()=>{변수.재장전.플레이어 = true},1500);
+        setTimeout(()=>{변수.재장전.플레이어 = true},900);
       }else{
         const 손 = HTML('#플레이어손');
         const 손이전X = HTML('#플레이어손').style.left;
@@ -592,7 +592,7 @@
         let 손위치 = 손.getBoundingClientRect();
         순간이동('#플레이어손', 손위치.left, '10%');
         재장전효과();
-        setTimeout(()=>{순간이동('#플레이어손', 손이전X, 손이전Y); 변수.재장전,플레이어 = true;},2000);
+        setTimeout(()=>{순간이동('#플레이어손', 손이전X, 손이전Y); 변수.재장전.플레이어 = true;},2000);
         변수.눈남음+=5;
         
       }
