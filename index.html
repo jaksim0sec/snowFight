@@ -199,6 +199,41 @@
         transform: translateX(-50%);
         width: 100px;
       }
+
+      #장전바 {
+      opacity: 0;
+      font-size: 20px;
+      font-weight: bold;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      border-radius: 50%;
+      border: 1px solid #000000;
+      position: relative;
+      background: conic-gradient(#00000050 0deg, white 0deg);
+      transition: all 0.5s ease;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    #내부장전바 {
+      width: 90%;
+      height: 90%;
+      border-radius: inherit;
+      background-color: #000000;
+      margin: auto;
+      display: flex;
+      color: white;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #내부장전바 span {
+      font-family: monospace;
+      font-size: 1rem;
+    }
     </style>
   </head>
   <body>
@@ -221,6 +256,11 @@
       </div>
       <div id="플레이어손" class="오브젝트"></div>
       <progress value="50" max="100" id="플레이어체력"></progress>
+      <div id="장전바" onclick="">
+      <div id="내부장전바">
+        <span>0.0</span>
+      </div>
+    </div>
     </div>
     <div id="그림자"></div>
 
@@ -281,7 +321,7 @@
         눈덩이카운터: 0,
         기관총카운터: { 적군: 0, 아군: 0 },
       };
-      let 변수 = { 재장전: { 플레이어: 0, 적군기관총: true } };
+      let 변수 = { 재장전: { 플레이어: 0, 적군기관총: true } ,눈남음:5,};
       const 이미지 = {
         캐릭터: {
           정보: ['w1.png', 'w2.png', 'w3.png'],
@@ -451,6 +491,8 @@
         }
       });
       document.addEventListener('mouseup', async function (e) {
+        if(변수.눈남음 > 0){
+        변수.눈남음 --;
         const 손 = HTML('#플레이어손');
         const 손이전 = HTML('#플레이어손').style.left;
         let 손위치 = 손.getBoundingClientRect();
@@ -539,7 +581,19 @@
         setTimeout(() => {
           순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
         }, 500);
-      });
+      }else{
+        const 손 = HTML('#플레이어손');
+        const 손이전X = HTML('#플레이어손').style.left;
+        const 손이전Y = HTML('#플레이어손').style.bottom;
+        //console.log(손이전X, 손이전Y)
+        let 손위치 = 손.getBoundingClientRect();
+        순간이동('#플레이어손', 손위치.left, '10%');
+        재장전효과();
+        setTimeout(()=>{순간이동('#플레이어손', 손이전X, 손이전Y);},2000);
+        변수.눈남음+=5;
+        
+      }
+    });
 
       // 게임 도움 함수
       function 포물선이동(대상, X, 시간, 강도, 함수목록, 종료함수) {
@@ -755,6 +809,32 @@
       }
 
       전체반복관리();
+
+      function 재장전효과() {
+      const 장전바 = HTML('#장전바');
+      const 장전숫자 = HTML('#내부장전바 span');
+      let 장전각도 = 0;
+      let 장전시간 = 6.0;
+      장전바.style.opacity = 0.8;
+      장전바.style.background = `conic-gradient(#000000CC 0deg, white 0deg)`;
+      function 효과() {
+        장전각도 += 3; 
+        장전시간 -= 0.05;
+
+        // Update background
+        장전바.style.background = `conic-gradient(#000000CC ${장전각도}deg, white 0deg)`;
+        장전숫자.textContent = 장전시간.toFixed(1);
+        if (장전각도 >= 360) {
+          장전숫자.textContent = '0.0';
+          setTimeout(()=>{장전바.style.opacity = 0;},100)
+          return;
+        }
+
+        requestAnimationFrame(효과);
+      }
+
+      효과();
+    }
     </script>
   </body>
 </html>
