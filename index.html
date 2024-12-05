@@ -68,8 +68,6 @@
         height: 100%;
       }
 
-      #아군영역{width:800px;}
-
       #플레이어 {
         width: 45px;
         min-height: 100px;
@@ -160,7 +158,7 @@
       .판 {
         width: 20px;
         height: 80px;
-        left: /*calc(50% - 10px)*/ 800px;
+        right: calc(70% + 10px);
         border: 1px solid black;
         transition : all 1s ease;
       }
@@ -181,10 +179,10 @@
       }
 
       #아군기관총 {
-        left: calc(800px - 25px - 250px);
+        left: calc(50% - 25px - 250px);
       }
       #적군기관총 {
-        left: calc(800px + 120px);
+        right: calc(70% - 25px - 380px);
       }
 
       #플레이어체력 {
@@ -196,7 +194,7 @@
 
       #적군기관총체력 {
         position: absolute;
-        left: calc(800px + 300px);
+        right: calc(70% - 300px);
         bottom: calc(10% + 250px);
         transform: translateX(-50%);
         width: 100px;
@@ -242,8 +240,8 @@
     <div id="보드">
       <div id="월드">
         <div id="땅">
-          <div class="영역" id = "아군영역"></div>
-          <div class="영역" id = "적군영역"></div>
+          <div class="영역">ㅇ</div>
+          <div class="영역">ㅈ</div>
         </div>
         <div class="오브젝트 기지" id="아군기지">아군기지</div>
         <!--<div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>-->
@@ -469,6 +467,7 @@
       //입력관리
       document.addEventListener('keydown', (e) => {
         const key = e.key;
+        //console.log(key)
         if (!순환.키[key] && 함수.키[key]) {
           순환.키[key] = setInterval(() => {
             함수.키[key]();
@@ -596,7 +595,7 @@
         재장전효과();
         setTimeout(()=>{순간이동('#플레이어손', 손이전X, 손이전Y); 변수.재장전.플레이어 = true;},2000);
         변수.눈남음+=5;
-        
+
       }
     }});
 
