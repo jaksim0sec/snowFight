@@ -4,12 +4,6 @@
     <title>눈싸움3</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@100..900&display=swap"
-      rel="stylesheet"
-    />
     <style>
       body {
         width: 100vw;
@@ -21,9 +15,6 @@
         align-items: center;
         justify-content: center;
         user-select: none;
-        font-family: 'Gowun Dodum', sans-serif;
-        font-weight: 400;
-        font-style: normal;
       }
 
       #보드 {
@@ -51,7 +42,7 @@
       }
 
       #월드 {
-        width: 3000px;
+        width: 2000px;
         height: 100%;
         position: absolute;
         bottom: 0px;
@@ -167,8 +158,9 @@
       .판 {
         width: 20px;
         height: 80px;
-        right: 70%;
-        transition: all 1s ease;
+        left: calc(50% - 10px);
+        border: 1px solid black;
+        transition : all 1s ease;
       }
 
       .기관총 {
@@ -190,7 +182,7 @@
         left: calc(50% - 25px - 250px);
       }
       #적군기관총 {
-        right: calc(70% - 25px - 380px);
+        right: calc(50% - 25px - 380px);
       }
 
       #플레이어체력 {
@@ -202,60 +194,11 @@
 
       #적군기관총체력 {
         position: absolute;
-        right: calc(70% - 300px);
+        right: calc(50% - 300px);
         bottom: calc(10% + 250px);
         transform: translateX(-50%);
         width: 100px;
       }
-
-      #장전바 {
-        opacity: 0;
-        font-size: 35px;
-        font-weight: bold;
-        width: 80px;
-        height: 80px;
-        display: flex;
-        border-radius: 50%;
-        border: 1px solid #000000;
-        position: relative;
-        background: conic-gradient(#00000050 0deg, white 0deg);
-        transition: all 0.5s ease;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        box-shadow: 4px 4px 4px #00000050;
-      }
-
-      #내부장전바 {
-        width: 90%;
-        height: 90%;
-        border-radius: inherit;
-        background-color: #000000;
-        margin: auto;
-        display: flex;
-        color: white;
-        justify-content: center;
-        align-items: center;
-      }
-
-      #내부장전바 span {
-        font-family: monospace;
-        font-size: 1rem;
-      }
-
-      #아군힐러{
-        width:45px;
-        height: 100px;
-        left: 15%;
-        border: 1px solid black;
-      }
-      #판{
-        display: flex;
-        flex-direction: column;
-        padding: none;
-      }
-      #판 img{width: 20px; height: 80px; border: none; margin: none;}
     </style>
   </head>
   <body>
@@ -267,10 +210,9 @@
         </div>
         <div class="오브젝트 기지" id="아군기지">아군기지</div>
         <!--<div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>-->
-        <div class="오브젝트 판" id = '판'><img src = 'B1.png'/></div>
+        <div class="오브젝트 판">판</div>
         <div class="오브젝트 기관총" id="적군기관총"><img src="G1O.png" /></div>
         <progress value="100" max="100" id="적군기관총체력"></progress>
-        <img src = '' id = "아군힐러" class = '오브젝트'/>
         <div class="오브젝트 기지" id="적군기지">적군기지</div>
         <div></div>
       </div>
@@ -279,11 +221,6 @@
       </div>
       <div id="플레이어손" class="오브젝트"></div>
       <progress value="50" max="100" id="플레이어체력"></progress>
-      <div id="장전바" onclick="">
-        <div id="내부장전바">
-          <span>0.0</span>
-        </div>
-      </div>
     </div>
     <div id="그림자"></div>
 
@@ -344,7 +281,7 @@
         눈덩이카운터: 0,
         기관총카운터: { 적군: 0, 아군: 0 },
       };
-      let 변수 = { 재장전: { 플레이어: true, 적군기관총: true }, 눈남음: 5 };
+      let 변수 = { 재장전: { 플레이어: 0, 적군기관총: true } };
       const 이미지 = {
         캐릭터: {
           정보: ['w1.png', 'w2.png', 'w3.png'],
@@ -454,7 +391,7 @@
               HTML('#플레이어 img').src =
                 이미지[요소['#플레이어'].상태].정보[0];
               if (터치('#플레이어', '.판')) {
-                이동('#월드', -게임설정.상태.속도 * 2, 0);
+                이동('#월드', -게임설정.상태.속도*2, 0);
                 //console.log('dddd');
               }
             }, 200);
@@ -464,7 +401,7 @@
               HTML('#플레이어 img').src =
                 이미지[요소['#플레이어'].상태].정보[0];
               if (터치('#플레이어', '.판')) {
-                이동('#월드', 게임설정.상태.속도 * 2, 0);
+                이동('#월드', 게임설정.상태.속도*2, 0);
                 //console.log('dddd');
               }
             }, 200);
@@ -490,7 +427,6 @@
       //입력관리
       document.addEventListener('keydown', (e) => {
         const key = e.key;
-        //console.log(key)
         if (!순환.키[key] && 함수.키[key]) {
           순환.키[key] = setInterval(() => {
             함수.키[key]();
@@ -515,120 +451,102 @@
         }
       });
       document.addEventListener('mouseup', async function (e) {
-        if (변수.재장전.플레이어) {
-          변수.재장전.플레이어 = false;
-          if (변수.눈남음 > 0) {
-            변수.눈남음--;
-            const 손 = HTML('#플레이어손');
-            const 손이전 = HTML('#플레이어손').style.left;
-            let 손위치 = 손.getBoundingClientRect();
-            //if(e.clientX>손위치.left){alert('dd')}
-            await 순간이동('#플레이어손', 손위치.left, 'calc(10% - 50px)');
+        const 손 = HTML('#플레이어손');
+        const 손이전 = HTML('#플레이어손').style.left;
+        let 손위치 = 손.getBoundingClientRect();
+        //if(e.clientX>손위치.left){alert('dd')}
+        await 순간이동('#플레이어손', 손위치.left, 'calc(10% - 50px)');
 
-            setTimeout(async function () {
-              순간이동(
-                '#플레이어손',
-                e.clientX > 손위치.left
-                  ? 'calc(50% - 15px + 40px)'
-                  : 'calc(50% - 15px - 40px)',
-                'calc(10% + 50px)'
-              );
-              const 손Y = getComputedStyle(손).bottom;
-              const 월드 = HTML('#월드');
-              const 월드위치 = 월드.getBoundingClientRect();
-              const 손X = 손위치.left - 월드위치.left;
-              let 목표X = e.clientX - 월드위치.left + 랜덤(-30, 30) + 'px';
-              if (Math.abs(e.clientX - 월드위치.left) > Math.abs(손X) + 400) {
-                목표X = 손X + 400 * (손X / Math.abs(손X)) + 'px';
+        setTimeout(async function () {
+          순간이동(
+            '#플레이어손',
+            e.clientX > 손위치.left
+              ? 'calc(50% - 15px + 40px)'
+              : 'calc(50% - 15px - 40px)',
+            'calc(10% + 50px)'
+          );
+          const 손Y = getComputedStyle(손).bottom;
+          const 월드 = HTML('#월드');
+          const 월드위치 = 월드.getBoundingClientRect();
+          const 손X = 손위치.left - 월드위치.left;
+          let 목표X = e.clientX - 월드위치.left + 랜덤(-30, 30) + 'px';
+          if (Math.abs(e.clientX - 월드위치.left) > Math.abs(손X) + 400) {
+            목표X = 손X + 400 * (손X / Math.abs(손X)) + 'px';
+          }
+          //const 목표Y = '9%';
+
+          // 눈덩이 생성
+          let 눈덩이 = document.createElement('div');
+          게임설정.눈덩이카운터++;
+          눈덩이.classList.add('눈'); // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
+          눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
+          HTML('#월드').appendChild(눈덩이);
+          눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`);
+
+          // 눈덩이 초기 위치를 손의 절대적 위치로 설정 (월드의 상대적 위치로 변환)
+          눈덩이.style.position = 'absolute';
+          눈덩이.style.left = 손X + 'px';
+          눈덩이.style.bottom = '10%';
+          //let ㅌ = parseInt(getComputedStyle(눈덩이).bottom);
+          //alert(ㅌ)
+          //눈덩이.style.border = '1px solid black';
+          // 포물선 이동 함수 적용
+          const 반복함수 = [
+            function () {
+              if (터치('.판', `#눈덩이${게임설정.눈덩이카운터}`)) {
+                return 'stop';
               }
-              //const 목표Y = '9%';
-
-              // 눈덩이 생성
-              let 눈덩이 = document.createElement('div');
-              게임설정.눈덩이카운터++;
-              눈덩이.classList.add('눈'); // 눈덩이 스타일을 위한 클래스를 추가 (CSS 필요)
-              눈덩이.id = `눈덩이${게임설정.눈덩이카운터}`;
-              HTML('#월드').appendChild(눈덩이);
-              눈덩이 = HTML(`#눈덩이${게임설정.눈덩이카운터}`);
-
-              // 눈덩이 초기 위치를 손의 절대적 위치로 설정 (월드의 상대적 위치로 변환)
-              눈덩이.style.position = 'absolute';
-              눈덩이.style.left = 손X + 'px';
-              눈덩이.style.bottom = '10%';
-              //let ㅌ = parseInt(getComputedStyle(눈덩이).bottom);
-              //alert(ㅌ)
-              //눈덩이.style.border = '1px solid black';
-              // 포물선 이동 함수 적용
-              const 반복함수 = [
-                function () {
-                  if (터치('.판', `#눈덩이${게임설정.눈덩이카운터}`)) {
-                    return 'stop';
-                  }
-                  /*if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
+              /*if(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)){
                 return 'stop';
               }*/
-                },
-                //,function(){console.log('테스트')}
-              ];
+            },
+            //,function(){console.log('테스트')}
+          ];
 
-              const 종료함수 = function () {
-                if (터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)) {
-                  HTML('#적군기관총').style.filter = 'brightness(1.5)';
-                  요소['#적군기관총'].체력 -= 40;
-                  HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
+          const 종료함수 = function () {
+            if (터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)) {
+              HTML('#적군기관총').style.filter = 'brightness(1.5)';
+              요소['#적군기관총'].체력 -= 10;
+              HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
 
-                  if (요소['#적군기관총'].체력 < 0) {
-                    요소['#적군기관총'].체력 = 0;
-                  }
-                  if (요소['#적군기관총'].체력 == 0) {
-                    //alert('dd')
-                    HTML('#적군기관총 img').src = 'G1D.png';
-                    //HTML('.판').style.transition = 'all 1s ease';
-                    setTimeout(() => {
-                      이동('.판', 0, -100);
-                    }, 500);
-                  }
-                  setTimeout(() => {
-                    HTML('#적군기관총').style.filter = '';
-                  }, 200);
-                }
-              };
+              if (요소['#적군기관총'].체력 < 0) {
+                요소['#적군기관총'].체력 = 0;
+              }
+              if (요소['#적군기관총'].체력 == 0) {
+                //alert('dd')
+                HTML('#적군기관총 img').src = 'G1D.png';
+                //HTML('.판').style.transition = 'all 1s ease';
+                setTimeout(()=>{이동('.판',0,-100);},500);
+              }
+              setTimeout(() => {
+                HTML('#적군기관총').style.filter = '';
+              }, 200);
+            }
+            const 위치차 = parseInt(HTML(`#눈덩이${게임설정.눈덩이카운터}`).style.bottom)  - parseInt(HTML('#월드').getBoundingClientRect().height)/10;
+            if(Math.abs(위치차)>4){
+              setTimeout(()=>{HTML(`#눈덩이${게임설정.눈덩이카운터}`).style.transition = 'all 0.5s ease';HTML(`#눈덩이${게임설정.눈덩이카운터}`).style.opacity = 0;},500)
+            setTimeout(()=>{
+              if(요소[`#눈덩이${게임설정.눈덩이카운터}`]){delete 요소[`#눈덩이${게임설정.눈덩이카운터}`]}
+              HTML(`#눈덩이${게임설정.눈덩이카운터}`).remove();
+              //게임설정.눈덩이카운터--
+            },1000);};
+          };
 
-              const 강도 =
-                요소['#플레이어'].상태 == '숙캐릭터'
-                  ? 랜덤(1, 5)
-                  : 랜덤(10, 25);
-              포물선이동(
-                `#눈덩이${게임설정.눈덩이카운터}`,
-                목표X,
-                800,
-                강도,
-                반복함수,
-                종료함수
-              );
-              //console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
-            }, 100);
-            setTimeout(() => {
-              순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
-            }, 500);
-            setTimeout(() => {
-              변수.재장전.플레이어 = true;
-            }, 900);
-          } else {
-            const 손 = HTML('#플레이어손');
-            const 손이전X = HTML('#플레이어손').style.left;
-            const 손이전Y = HTML('#플레이어손').style.bottom;
-            //console.log(손이전X, 손이전Y)
-            let 손위치 = 손.getBoundingClientRect();
-            순간이동('#플레이어손', 손위치.left, '10%');
-            재장전효과();
-            setTimeout(() => {
-              순간이동('#플레이어손', 손이전X, 손이전Y);
-              변수.재장전.플레이어 = true;
-            }, 2000);
-            변수.눈남음 += 5;
-          }
-        }
+          const 강도 =
+            요소['#플레이어'].상태 == '숙캐릭터' ? 랜덤(1, 5) : 랜덤(10, 25);
+          포물선이동(
+            `#눈덩이${게임설정.눈덩이카운터}`,
+            목표X,
+            800,
+            강도,
+            반복함수,
+            종료함수
+          );
+          //console.log(터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`))
+        }, 100);
+        setTimeout(() => {
+          순간이동('#플레이어손', 손이전, 'calc(10% + 25px)');
+        }, 500);
       });
 
       // 게임 도움 함수
@@ -667,8 +585,8 @@
           이동(대상, x, y);
           for (var i = 0; i < 함수목록.length; i++) {
             if (함수목록[i]() === 'stop') {
-              종료함수();
-              clearInterval(포물선운동);
+              종료함수(); 
+              clearInterval(포물선운동); 
               return;
             }
             함수목록[i]();
@@ -677,8 +595,8 @@
           //else{테스트[1]-=y}
           //console.log(카운터 , 원y,parseInt(getComputedStyle(옵).bottom) , 테스트)
           if (카운터 + 2 > 횟수) {
-            종료함수();
-            clearInterval(포물선운동);
+            종료함수(); 
+            clearInterval(포물선운동); 
             return;
           }
         }, 주기);
@@ -845,34 +763,6 @@
       }
 
       전체반복관리();
-
-      function 재장전효과() {
-        const 장전바 = HTML('#장전바');
-        const 장전숫자 = HTML('#내부장전바 span');
-        let 장전각도 = 0;
-        let 장전시간 = 6.0;
-        장전바.style.opacity = 0.8;
-        장전바.style.background = `conic-gradient(#000000CC 0deg, white 0deg)`;
-        function 효과() {
-          장전각도 += 3;
-          장전시간 -= 0.05;
-
-          // Update background
-          장전바.style.background = `conic-gradient(#000000CC ${장전각도}deg, white 0deg)`;
-          장전숫자.textContent = 장전시간.toFixed(1);
-          if (장전각도 >= 360) {
-            장전숫자.textContent = '0.0';
-            setTimeout(() => {
-              장전바.style.opacity = 0;
-            }, 100);
-            return;
-          }
-
-          requestAnimationFrame(효과);
-        }
-
-        효과();
-      }
     </script>
   </body>
 </html>
