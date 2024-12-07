@@ -480,7 +480,21 @@
       <div class="window" id="아이템">인벤토리</div>
     </div>
     <div id="그림자"></div>
-
+    <style>
+      @keyframes loaderA{
+        0%{opacity:1}
+        100%{opacity:0}
+      }
+      #loader{
+        width: 100vw;
+        height: 100vh;
+        background-color: black;
+        animation: loaderA 2s ease forwards;
+        position: absolute;
+        pointer-events: none;
+      }
+    </style>
+    <div id = 'loader'></div>
     <script>
       //기본함수팩
       function HTML(name) {
