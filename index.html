@@ -416,9 +416,16 @@
           opacity: 1;
         }
       }
+
+      #마우스판별기{
+        width:5px;
+        height:5px;
+        position:absolute;
+      }
     </style>
   </head>
   <body>
+    <div id='마우스판별기'></div>
     <div id="보드">
       <div id="월드">
         <div id="땅">
@@ -654,6 +661,13 @@
             setTimeout(()=>{HTML('#플레이어').style.filter = ''},500)
           },
         },
+        고각도발사기: {
+          주소: 'P.png',
+          설명: '눈덩이를 <span class = "highlight">3</span>배 높이 던집니다.',
+          효과: function () {
+            요소['#플레이어'].적용+='곽';
+          },
+        },
       };
       let 순환 = { 키: {}, 총알: {}, 요청성반복: {} };
       let 요소 = {
@@ -663,6 +677,7 @@
           y: HTML('#플레이어').getBoundingClientRect().bottom,
           상태: '캐릭터',
           체력: 100,
+          적용: '',
         },
         '#적군기관총': {
           체력: 100,
@@ -698,8 +713,15 @@
           함수.키종료[key]();
         }
       });
+      document.addEventListener('mousemove', function (e) {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            const 마우스판별기 = HTML('#마우스판별기');
+            마우스판별기.style.left = mouseX + 'px';
+            마우스판별기.style.top = mouseY + 'px';
+        });
       document.addEventListener('mouseup', async function (e) {
-        if (변수.재장전.플레이어) {
+        if (변수.재장전.플레이어 && !터치('#아이템','#마우스판별기')) {
           변수.재장전.플레이어 = false;
           if (변수.눈남음 > 0) {
             변수.눈남음--;
@@ -817,10 +839,11 @@
                 }
               };
 
-              const 강도 =
+              let 강도 =
                 요소['#플레이어'].상태 == '숙캐릭터'
                   ? 랜덤(1, 5)
-                  : 랜덤(10, 25);
+                  : 랜덤(10, 20);
+              if(요소['#플레이어'].적용.includes('곽')){강도*=3};
               포물선이동(
                 `#눈덩이${게임설정.눈덩이카운터}`,
                 목표X,
@@ -956,6 +979,7 @@
       //게임일반함수
 
       function 전체반복관리() {
+        보상('고각도발사기',1);
         const 관리자 = setInterval(() => {
           HTML(
             '#장전값'
