@@ -283,7 +283,7 @@
         font-size: 20px;
       }
 
-      #장전현황 button{
+      #장전현황 button {
         padding: 5px;
         border-radius: 5px;
         background-color: #00000050;
@@ -294,14 +294,14 @@
         align-items: center;
         justify-content: center;
         font-size: 20px;
-        border:none;
+        border: none;
       }
 
-      #장전현황 button:hover{
+      #장전현황 button:hover {
         background-color: #00000030;
       }
 
-      #장전현황 button:active{
+      #장전현황 button:active {
         transform: scale(0.9);
       }
 
@@ -330,41 +330,42 @@
         justify-content: center;
         align-items: center;
         position: relative;
+        animation: 반짝 1s ease;
       }
 
-      #아이템 .카테고리:hover{
+      #아이템 .카테고리:hover {
         transform: translateY(-4px) scale(1.02);
         filter: brightness(1.4);
         background-color: #00000030;
       }
 
-      #아이템 .카테고리:active{
+      #아이템 .카테고리:active {
         transform: translateY(4px) scale(0.98);
       }
-      #아이템 .카테고리 img{
+      #아이템 .카테고리 img {
         width: 30px;
         height: 30px;
         margin-right: 5px;
       }
 
-      #아이템 .카테고리  .fontC div{
+      #아이템 .카테고리 .fontC div {
         font-size: 9px;
       }
 
-      #아이템 .카테고리 .fontC{
+      #아이템 .카테고리 .fontC {
         width: 100%;
       }
 
-      #아이템 .카테고리  .fontC .제목{
+      #아이템 .카테고리 .fontC .제목 {
         font-size: 12px;
         font-weight: bold;
       }
 
-      #아이템 .카테고리 .수량{
+      #아이템 .카테고리 .수량 {
         font-size: 8px;
         font-weight: bold;
         position: absolute;
-        bottom:2px;
+        bottom: 2px;
         background-color: #00000070;
         border-radius: 50%;
         padding: 2px;
@@ -377,18 +378,18 @@
       }
 
       #아이템::-webkit-scrollbar {
-        width: 8px; 
+        width: 8px;
       }
 
       #아이템::-webkit-scrollbar-thumb {
-        background-color: #00000050; 
-        border-radius: 8px; 
+        background-color: #00000050;
+        border-radius: 8px;
         border: 1px solid transparent;
         background-clip: padding-box;
       }
 
       #아이템::-webkit-scrollbar-thumb:hover {
-        background-color: #00000090; 
+        background-color: #00000090;
       }
 
       #아이템::-webkit-scrollbar-track {
@@ -398,14 +399,31 @@
       .highlight {
         font-weight: bold;
       }
+
+      @keyframes 반짝 {
+        0% {
+          filter: brightness(2);
+          opacity: 0;
+          transform: scale(1.1);
+          background-color: #00000020;
+        }
+        50% {
+          filter: brightness(1.5);
+          background-color: #00000040;
+        }
+        100% {
+          filter: brightness(1);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
     <div id="보드">
       <div id="월드">
         <div id="땅">
-          <div class="영역">ㅇ</div>
-          <div class="영역">ㅈ</div>
+          <div class="영역"></div>
+          <div class="영역"></div>
         </div>
         <div class="오브젝트 기지" id="아군기지">아군기지</div>
         <!--<div class="오브젝트 기관총" id="아군기관총">ㅇㄱ</div>-->
@@ -427,13 +445,12 @@
         </div>
       </div>
       <div class="window" id="장전현황">
-        <span id = '장전값'>5 / <span class="highlight" style="margin-left: 4px">5</span></span>
+        <span id="장전값"
+          >5 / <span class="highlight" style="margin-left: 4px">5</span></span
+        >
         <button onmousedown="변수.눈남음 = 0;">↺</button>
       </div>
-      <div class="window" id="아이템">
-        <div class = '카테고리' id = '템HP포션' onclick="템사용('HP포션',1)"><img src= ''><div class = 'fontC'><div class = '제목'>HP포션</div><div>체력을 <span class = 'highlight'>10%</span> 회복합니다.</div></div>
-        <div class = '수량'>⨉1</div></div>
-      </div>
+      <div class="window" id="아이템"></div>
     </div>
     <div id="그림자"></div>
 
@@ -488,7 +505,7 @@
       }
 
       //정의
-      let 인벤토리 = {'HP포션':{수량:1}};
+      let 인벤토리 = {};
       const 시스템설정 = { 시간: { 키: 100 } };
       const 게임설정 = {
         상태: { 속도: 25 },
@@ -623,10 +640,22 @@
         },
       };
 
-      const 템설명 = {'HP포션':{주소:'P.png',설명: '체력을 <span class = "highlight">10%</span> 회복합니다.',효과 : (function(){})}}
+      const 템설명 = {
+        HP포션: {
+          주소: 'P.png',
+          설명: '체력을 <span class = "highlight">10%</span> 회복합니다.',
+          효과: function () {
+            if (요소['#플레이어'].체력 + 10 > 100) {
+              요소['#플레이어'].체력 = 100;
+            } else {
+              요소['#플레이어'].체력 += 10;
+            }
+          },
+        },
+      };
       let 순환 = { 키: {}, 총알: {}, 요청성반복: {} };
       let 요소 = {
-        기본형식: { hp: 0 },
+        기본형식: { hp: 0, 활성화: true },
         '#플레이어': {
           x: HTML('#플레이어').getBoundingClientRect().left,
           y: HTML('#플레이어').getBoundingClientRect().bottom,
@@ -635,6 +664,7 @@
         },
         '#적군기관총': {
           체력: 100,
+          활성화: true,
         },
       };
 
@@ -724,7 +754,10 @@
               ];
 
               const 종료함수 = function () {
-                if (터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)) {
+                if (
+                  터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`) &&
+                  요소['#적군기관총'].활성화
+                ) {
                   HTML('#적군기관총').style.filter = 'brightness(1.5)';
                   요소['#적군기관총'].체력 -= 20;
                   HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
@@ -735,6 +768,8 @@
                   if (요소['#적군기관총'].체력 == 0) {
                     //alert('dd')
                     HTML('#적군기관총 img').src = 'G1D.png';
+                    보상('HP포션', 3);
+                    요소['#적군기관총'].활성화 = false;
                     //HTML('.판').style.transition = 'all 1s ease';
                     setTimeout(() => {
                       이동('.판', 0, -100);
@@ -762,23 +797,21 @@
                     HTML(`#눈덩이${게임설정.눈덩이카운터}`).remove();
                     //게임설정.눈덩이카운터--
                   }, 1000);
-                }
-                else{
+                } else {
                   const 값 = 게임설정.눈덩이카운터;
-                  setTimeout(()=>{
-                    setTimeout(() => {
-                    HTML(`#눈덩이${값}`).style.transition =
-                      'all 0.5s ease';
-                    HTML(`#눈덩이${값}`).style.opacity = 0;
-                  }, 500);
                   setTimeout(() => {
-                    if (요소[`#눈덩이${값}`]) {
-                      delete 요소[`#눈덩이${값}`];
-                    }
-                    HTML(`#눈덩이${값}`).remove();
-                    //게임설정.눈덩이카운터--
-                  }, 1000);
-                  },5000)
+                    setTimeout(() => {
+                      HTML(`#눈덩이${값}`).style.transition = 'all 0.5s ease';
+                      HTML(`#눈덩이${값}`).style.opacity = 0;
+                    }, 500);
+                    setTimeout(() => {
+                      if (요소[`#눈덩이${값}`]) {
+                        delete 요소[`#눈덩이${값}`];
+                      }
+                      HTML(`#눈덩이${값}`).remove();
+                      //게임설정.눈덩이카운터--
+                    }, 1000);
+                  }, 5000);
                 }
               };
 
@@ -954,7 +987,7 @@
                     월드위치.left;
                   let 총알 = document.createElement('div');
                   게임설정.기관총카운터.적군++;
-                  총알.classList.add('눈'); 
+                  총알.classList.add('눈');
                   총알.id = `총알${게임설정.기관총카운터.적군}`;
                   HTML('#월드').appendChild(총알);
                   관리소규모요소.push(`#총알${게임설정.기관총카운터.적군}`);
@@ -1065,39 +1098,49 @@
         효과();
       }
 
-      function 보상(템,수량){
-        if(인벤토리[템]){
-          인벤토리[템].수량+=수량;
-          HTML(`#템${템} .수량`).innerHTML = '⨉'+인벤토리[템].수량;
-        }
-        else{
-          인벤토리[템] = {수량:수량};
+      function 보상(템, 수량) {
+        if (인벤토리[템]) {
+          인벤토리[템].수량 += 수량;
+          HTML(`#템${템} .수량`).innerHTML = '⨉' + 인벤토리[템].수량;
+        } else {
+          인벤토리[템] = { 수량: 수량 };
           const 템카텔 = document.createElement('div');
           템카텔.id = `템${템}`;
           템카텔.classList.add('카테고리');
-          템카텔.onclick = function(){템사용(템,1)}
-          템카텔.innerHTML = 
-          `<img src= '${템설명[템].주소}'><div class = 'fontC'><div class = '제목'>${템}</div><div>${템설명[템].설명}</div></div>
+          템카텔.onclick = function () {
+            템사용(템, 1);
+          };
+          템카텔.innerHTML = `<img src= '${템설명[템].주소}'><div class = 'fontC'><div class = '제목'>${템}</div><div>${템설명[템].설명}</div></div>
         <div class = '수량'>⨉${수량}</div>`;
           HTML('#아이템').appendChild(템카텔);
         }
       }
 
-      function 템사용(템,수량){
+      function 템사용(템, 수량) {
         let 최종수량 = 수량;
-        if(인벤토리[템].수량<수량){최종수량 = 인벤토리[템].수량;console.log('수상함 감지' + 최종수량,인벤토리[템].수량)}
-        for(var i=0; i<최종수량;i++){
-          console.log(`${(최종수량>1)?'→':'▶'} 아이템 "${템}" 을 사용하였습니다.`);
+        if (인벤토리[템].수량 < 수량) {
+          최종수량 = 인벤토리[템].수량;
+          console.log('수상함 감지' + 최종수량, 인벤토리[템].수량);
         }
-        if(최종수량>1){console.log(`▶ 아이템 "${템}" 을 최종 ${수량} 개 사용하였습니다.`);}
-        인벤토리[템].수량-=최종수량;
-        HTML(`#템${템} .수량`).innerHTML = '⨉'+인벤토리[템].수량;
-        if(인벤토리[템].수량==0){
-          setTimeout(()=>{
+        for (var i = 0; i < 최종수량; i++) {
+          console.log(
+            `${최종수량 > 1 ? '→' : '▶'} 아이템 "${템}" 을 사용하였습니다.`
+          );
+          템설명[템].효과();
+        }
+        if (최종수량 > 1) {
+          console.log(`▶ 아이템 "${템}" 을 최종 ${수량} 개 사용하였습니다.`);
+        }
+        인벤토리[템].수량 -= 최종수량;
+        HTML(`#템${템} .수량`).innerHTML = '⨉' + 인벤토리[템].수량;
+        if (인벤토리[템].수량 == 0) {
+          //HTML(`#템${템}`).style.animation = '';
+          HTML(`#템${템}`).style.opacity = '0';
+          setTimeout(() => {
             HTML(`#템${템}`).remove();
             delete 인벤토리[템];
-            console.log(`▶ 아이템 "${템}" 을 모두 소모하였습니다.`)
-          },500)
+            console.log(`▶ 아이템 "${템}" 을 모두 소모하였습니다.`);
+          }, 500);
         }
       }
     </script>
