@@ -645,11 +645,13 @@
           주소: 'P.png',
           설명: '체력을 <span class = "highlight">10%</span> 회복합니다.',
           효과: function () {
+            HTML('#플레이어').style.filter = 'brightness(1.5)';
             if (요소['#플레이어'].체력 + 10 > 100) {
               요소['#플레이어'].체력 = 100;
             } else {
               요소['#플레이어'].체력 += 10;
             }
+            setTimeout(()=>{HTML('#플레이어').style.filter = ''},500)
           },
         },
       };
