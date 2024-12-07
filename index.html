@@ -283,6 +283,18 @@
         font-size: 20px;
       }
 
+      #적용현황 {
+        width: 100px;
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        bottom: calc(8% + 270px);
+        left: 10px;
+        font-size: 15px;
+      }
+
       #장전현황 button {
         padding: 5px;
         border-radius: 5px;
@@ -361,6 +373,9 @@
         font-weight: bold;
       }
 
+      #대기열 {
+        font-size: 12px;
+      }
       #아이템 .카테고리 .수량 {
         font-size: 8px;
         font-weight: bold;
@@ -417,15 +432,15 @@
         }
       }
 
-      #마우스판별기{
-        width:5px;
-        height:5px;
-        position:absolute;
+      #마우스판별기 {
+        width: 5px;
+        height: 5px;
+        position: absolute;
       }
     </style>
   </head>
   <body>
-    <div id='마우스판별기'></div>
+    <div id="마우스판별기"></div>
     <div id="보드">
       <div id="월드">
         <div id="땅">
@@ -450,6 +465,11 @@
         <div id="내부장전바">
           <span>0.0</span>
         </div>
+      </div>
+      <div class="window" id="적용현황">
+        적용된 스킬
+        <hr style="border-color: #ffffff60; width: 70%" />
+        <div id="대기열"></div>
       </div>
       <div class="window" id="장전현황">
         <span id="장전값"
@@ -484,7 +504,7 @@
         } else {
           대상 += 글자;
         }
-        return 대상
+        return 대상;
       }
 
       function 터치(대상일, 대상이) {
@@ -660,14 +680,16 @@
             } else {
               요소['#플레이어'].체력 += 10;
             }
-            setTimeout(()=>{HTML('#플레이어').style.filter = ''},500)
+            setTimeout(() => {
+              HTML('#플레이어').style.filter = '';
+            }, 500);
           },
         },
         고각도발사기: {
           주소: 'GI.png',
           설명: '눈덩이를 <span class = "highlight">2~3</span>배 높이 던집니다.',
           효과: function () {
-            요소['#플레이어'].적용+='곽';
+            요소['#플레이어'].적용 += '곽';
           },
         },
       };
@@ -716,14 +738,14 @@
         }
       });
       document.addEventListener('mousemove', function (e) {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            const 마우스판별기 = HTML('#마우스판별기');
-            마우스판별기.style.left = mouseX + 'px';
-            마우스판별기.style.top = mouseY + 'px';
-        });
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const 마우스판별기 = HTML('#마우스판별기');
+        마우스판별기.style.left = mouseX + 'px';
+        마우스판별기.style.top = mouseY + 'px';
+      });
       document.addEventListener('mouseup', async function (e) {
-        if (변수.재장전.플레이어 && !터치('#아이템','#마우스판별기')) {
+        if (변수.재장전.플레이어 && !터치('#아이템', '#마우스판별기')) {
           변수.재장전.플레이어 = false;
           if (변수.눈남음 > 0) {
             변수.눈남음--;
@@ -845,7 +867,10 @@
                 요소['#플레이어'].상태 == '숙캐릭터'
                   ? 랜덤(3, 5)
                   : 랜덤(10, 20);
-              if(요소['#플레이어'].적용.includes('곽')){강도*=랜덤(2,3);요소['#플레이어'].적용= 토글(요소['#플레이어'].적용,'곽') };
+              if (요소['#플레이어'].적용.includes('곽')) {
+                강도 *= 랜덤(2, 3);
+                요소['#플레이어'].적용 = 토글(요소['#플레이어'].적용, '곽');
+              }
               포물선이동(
                 `#눈덩이${게임설정.눈덩이카운터}`,
                 목표X,
@@ -877,6 +902,14 @@
             }, 2200);
           }
         }
+        //alert('dd')
+        HTML('#대기열').innerHTML = 요소['#플레이어'].적용.replace(
+          '곽',
+          '멀리던지기<div></div>'
+        );
+        HTML(
+          '#장전값'
+        ).innerHTML = `${변수.눈남음} / <span class = 'highlight' style = 'margin-left: 4px;'>5</span>`;
       });
 
       // 게임 도움 함수
@@ -981,11 +1014,8 @@
       //게임일반함수
 
       function 전체반복관리() {
-        보상('고각도발사기',2);
+        보상('고각도발사기', 2);
         const 관리자 = setInterval(() => {
-          HTML(
-            '#장전값'
-          ).innerHTML = `${변수.눈남음} / <span class = 'highlight' style = 'margin-left: 4px;'>5</span>`;
           /*if (요소['#적군기관총'].체력 == 0) {
             HTML('#적군기관총 img').src = 'G1D.png';
           }*/
@@ -1135,7 +1165,7 @@
           const 템카텔 = document.createElement('div');
           템카텔.id = `템${템}`;
           템카텔.classList.add('카테고리');
-          템카텔.onclick = function () {
+          템카텔.onmousedown = function () {
             템사용(템, 1);
           };
           템카텔.innerHTML = `<img src= '${템설명[템].주소}'><div class = 'fontC'><div class = '제목'>${템}</div><div>${템설명[템].설명}</div></div>
