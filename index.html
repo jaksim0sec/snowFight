@@ -1227,6 +1227,9 @@
           }, 500);
         }
       }
+
+      let 시간 = 60*10;
+      const 타이머 = setInterval (()=>{시간--;if(시간<=0){alert('시간끝');clearInterval(타이머)}},1000);
     </script>
   </body>
 </html>
