@@ -203,7 +203,7 @@
 
       #적군기관총체력 {
         position: absolute;
-        right: calc(70% - 300px);
+        right: calc(70% - 320px);
         bottom: calc(10% + 250px);
         transform: translateX(-50%);
         width: 100px;
@@ -264,6 +264,7 @@
       }
 
       .window {
+        width: 120px;
         padding: 5px;
         border-radius: 5px;
         background-color: #00000050;
@@ -273,7 +274,6 @@
       }
 
       #장전현황 {
-        width: 100px;
         height: 50px;
         display: flex;
         align-items: center;
@@ -284,7 +284,6 @@
       }
 
       #적용현황 {
-        width: 100px;
         height: 80px;
         display: flex;
         flex-direction: column;
@@ -318,7 +317,6 @@
       }
 
       #아이템 {
-        width: 100px;
         height: 200px;
         display: flex;
         flex-direction: column;
@@ -432,6 +430,16 @@
         }
       }
 
+      #시간 {
+        height: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        top: calc(8% - 40px);
+        left: 10px;
+        font-size: 18px;
+      }
       #마우스판별기 {
         width: 5px;
         height: 5px;
@@ -469,7 +477,7 @@
       <div class="window" id="적용현황">
         적용된 스킬
         <hr style="border-color: #ffffff60; width: 70%" />
-        <div id="대기열"></div>
+        <div id="대기열">없음</div>
       </div>
       <div class="window" id="장전현황">
         <span id="장전값"
@@ -478,14 +486,19 @@
         <button onmousedown="변수.눈남음 = 0;">↺</button>
       </div>
       <div class="window" id="아이템">인벤토리</div>
+      <div class="window" id="시간">00:00 남음</div>
     </div>
     <div id="그림자"></div>
     <style>
-      @keyframes loaderA{
-        0%{opacity:1}
-        100%{opacity:0}
+      @keyframes loaderA {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
       }
-      #loader{
+      #loader {
         width: 100vw;
         height: 100vh;
         background-color: black;
@@ -494,7 +507,7 @@
         pointer-events: none;
       }
     </style>
-    <div id = 'loader'></div>
+    <div id="loader"></div>
     <script>
       //기본함수팩
       function HTML(name) {
@@ -828,8 +841,11 @@
                   요소['#적군기관총'].활성화
                 ) {
                   HTML('#적군기관총').style.filter = 'brightness(1.5)';
-                  요소['#적군기관총'].체력 -= 20*(요소['#플레이어'].적용.includes('슽')?2:1);
-                  if(요소['#플레이어'].적용.includes('슽')){요소['#플레이어'].적용 = 토글(요소['#플레이어'].적용,'슽')}
+                  요소['#적군기관총'].체력 -=
+                    20 * (요소['#플레이어'].적용.includes('슽') ? 2 : 1);
+                  if (요소['#플레이어'].적용.includes('슽')) {
+                    요소['#플레이어'].적용 = 토글(요소['#플레이어'].적용, '슽');
+                  }
                   HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
 
                   if (요소['#적군기관총'].체력 < 0) {
@@ -893,10 +909,12 @@
                 강도 *= 랜덤(2, 3);
                 요소['#플레이어'].적용 = 토글(요소['#플레이어'].적용, '곽');
               }
+              console.log(400*(1+ 강도/10)*(1+ parseInt(목표X)/100))
               포물선이동(
                 `#눈덩이${게임설정.눈덩이카운터}`,
                 목표X,
-                800,
+                //400*(1+ 강도/10)/**(1+ parseInt(Math.abs(e.clientX - 월드위치.left -손X + 400))/100)*/,
+                820,
                 강도,
                 반복함수,
                 종료함수
@@ -925,13 +943,10 @@
           }
         }
         //alert('dd')
-        HTML('#대기열').innerHTML = 요소['#플레이어'].적용.replace(
-          '곽',
-          '멀리던지기<div></div>'
-        ).replace(
-          '슽',
-          '돌넣어던지기<div></div>'
-        );
+        HTML('#대기열').innerHTML = 요소['#플레이어'].적용
+          .replace('곽', '멀리던지기<div></div>')
+          .replace('슽', '돌넣어던지기<div></div>');
+        if(HTML('#대기열').innerHTML.length<2){HTML('#대기열').innerHTML='없음'}
         HTML(
           '#장전값'
         ).innerHTML = `${변수.눈남음} / <span class = 'highlight' style = 'margin-left: 4px;'>5</span>`;
@@ -1228,8 +1243,18 @@
         }
       }
 
-      let 시간 = 60*10;
-      const 타이머 = setInterval (()=>{시간--;if(시간<=0){alert('시간끝');clearInterval(타이머)}},1000);
+      let 시간 = 60 * 10;
+      const 타이머 = setInterval(() => {
+        시간--;
+        HTML('#시간').innerHTML = ` ${Math.floor(시간 / 60)} : ${
+          시간 % 60
+        } 남음`;
+        if (시간 <= 0) {
+          alert('시간끝');
+          요소['#플레이어'].체력 = 0;
+          clearInterval(타이머);
+        }
+      }, 1000);
     </script>
   </body>
 </html>
