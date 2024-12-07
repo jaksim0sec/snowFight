@@ -262,6 +262,75 @@
         border: none;
         margin: none;
       }
+
+      .window {
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #00000050;
+        position: absolute;
+        margin: 5px;
+        color: white;
+      }
+
+      #장전현황 {
+        width: 100px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        bottom: calc(8% + 200px);
+        left: 10px;
+        font-size: 20px;
+      }
+
+      #아이템 {
+        width: 100px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        bottom: calc(8% - 20px);
+        left: 10px;
+        font-size: 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
+      #아이템 div {
+        width: calc(100% - 10px);
+        min-height: 60px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #00000050;
+        margin: 5px 0;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #아이템::-webkit-scrollbar {
+        width: 8px; 
+      }
+
+      #아이템::-webkit-scrollbar-thumb {
+        background-color: #00000050; 
+        border-radius: 8px; 
+        border: 1px solid transparent;
+        background-clip: padding-box;
+      }
+
+      #아이템::-webkit-scrollbar-thumb:hover {
+        background-color: #00000090; 
+      }
+
+      #아이템::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      .highlight {
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -289,6 +358,13 @@
         <div id="내부장전바">
           <span>0.0</span>
         </div>
+      </div>
+      <div class="window" id="장전현황">
+        5 / <span class="highlight" style="margin-left: 4px">5</span>
+      </div>
+      <div class="window" id="아이템">
+        <div>ㅇ</div>
+        <div>ㅇ</div>
       </div>
     </div>
     <div id="그림자"></div>
@@ -580,7 +656,7 @@
               const 종료함수 = function () {
                 if (터치('#적군기관총', `#눈덩이${게임설정.눈덩이카운터}`)) {
                   HTML('#적군기관총').style.filter = 'brightness(1.5)';
-                  요소['#적군기관총'].체력 -= 40;
+                  요소['#적군기관총'].체력 -= 20;
                   HTML('#적군기관총체력').value = 요소['#적군기관총'].체력;
 
                   if (요소['#적군기관총'].체력 < 0) {
@@ -759,6 +835,9 @@
 
       function 전체반복관리() {
         const 관리자 = setInterval(() => {
+          HTML(
+            '#장전현황'
+          ).innerHTML = `${변수.눈남음} / <span class = 'highlight' style = 'margin-left: 4px;'>5</span>`;
           /*if (요소['#적군기관총'].체력 == 0) {
             HTML('#적군기관총 img').src = 'G1D.png';
           }*/
