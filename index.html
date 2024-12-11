@@ -472,6 +472,22 @@
       #나무2{
         left: 2000px;
       }
+
+      .열쇠{
+        width: 30px;
+        height: 25px;
+        bottom: 15%;
+        left: 1850px;
+        transition: all 0.5s ease;
+        display:none;
+      }
+
+      .버튼{
+        width: 55px;
+        height: auto;
+        left: 2500px;
+        transition: all 0.5s ease;
+      }
     </style>
   </head>
   <body>
@@ -493,7 +509,8 @@
         <progress value="100" max="100" id="적군기관총체력"></progress>
         <img src="" id="아군힐러" class="오브젝트" />
         <div class="오브젝트 기지" id="적군기지">적군기지</div>
-        <img src='https://ifh.cc/g/6MGwvc.png' class= '오브젝트 나무' id="나무1"/>
+        <img src='https://ifh.cc/g/rd7NzX.png' class='오브젝트 열쇠'/>
+        <img src='https://ifh.cc/g/2SozhW.png' class='오브젝트 버튼'>
         <div></div>
       </div>
       <div id="플레이어" class="오브젝트">
@@ -764,6 +781,11 @@
             요소['#플레이어'].적용 += '슽';
           },
         },
+        열쇠:{
+          주소: 'https://ifh.cc/g/rd7NzX.png',
+          설명: '사용하면 열쇠를 장착할 수 잇습니다.',
+          효과: function(){요소['#플레이어'].적용 += '엸'},
+        }
       };
       let 시간 = 60 * 10;
       let 순환 = { 키: {}, 총알: {}, 요청성반복: {} };
@@ -984,7 +1006,8 @@
         //alert('dd')
         HTML('#대기열').innerHTML = 요소['#플레이어'].적용
           .replace('곽', '멀리던지기<div></div>')
-          .replace('슽', '돌넣어던지기<div></div>');
+          .replace('슽', '돌넣어던지기<div></div>')
+          .replace('엸', '<div id="color:#FFA723;">열쇠사용하기<div><div></div>');
         if(HTML('#대기열').innerHTML.length<2){HTML('#대기열').innerHTML='없음'}
         HTML(
           '#장전값'
@@ -1095,14 +1118,23 @@
       function 전체반복관리() {
         보상('고각도발사기', 1);
         보상('돌멩이', 1);
+        //보상('열쇠', 1);
         const 관리자 = setInterval(() => {
-          if(터치('#플레이어','#적군기지')){
+          if(터치('#플레이어','#적군기지') && 요소['#플레이어'].적용.includes('엸')){
             최종점수 = (((시간-10+요소['#플레이어'].체력/10)/100)/(3/10)).toFixed(2);
             alert(최종점수);clearInterval(관리자)
           };
           /*if (요소['#적군기관총'].체력 == 0) {
             HTML('#적군기관총 img').src = 'G1D.png';
           }*/
+          if(터치('#플레이어','.열쇠')&&!Object.keys(인벤토리).includes('열쇠'))
+          {보상('열쇠',1);HTML('.열쇠').style.opacity = 0; setTimeout(()=>{HTML('.열쇠').style.display = 'none';},500)}
+          if(터치('#플레이어','.버튼')&& HTML('.버튼').src!=='https://ifh.cc/g/Mn2nBF.png'){
+            //alert('테스트');
+            HTML('.버튼').src = 'https://ifh.cc/g/Mn2nBF.png';
+            HTML('.열쇠').style.display='block';
+            HTML('.열쇠').style.opacity=1;
+          }
           if(변수.나무){
           변수.나무=false;
           HTML('#나무1').style.bottom = '9%';
