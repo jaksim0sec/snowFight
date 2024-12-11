@@ -453,6 +453,25 @@
         transform: translateX(-400px);
         opacity: 0.95;
       }
+
+      .나무{
+        width: 50px;
+        height: 400px;
+        transform: scaleY(-1);
+        bottom: -400px;
+        transition: all 1s ease;
+      }
+
+      #나무1{
+        left: 1500px;
+      }
+      #나무3{
+        left: 1750px;
+      }
+
+      #나무2{
+        left: 2000px;
+      }
     </style>
   </head>
   <body>
@@ -460,6 +479,9 @@
     <div id="보드">
       <img src = 'BB.png' id = '뒷배경'>
       <div id="월드">
+        <img src='https://ifh.cc/g/6MGwvc.png' class= '오브젝트 나무' id="나무1"/>
+        <img src='https://ifh.cc/g/6MGwvc.png' class= '오브젝트 나무' id="나무3"/>
+        <img src='https://ifh.cc/g/6MGwvc.png' class= '오브젝트 나무' id="나무2"/>
         <div id="땅">
           <div class="영역"></div>
           <div class="영역"></div>
@@ -471,6 +493,7 @@
         <progress value="100" max="100" id="적군기관총체력"></progress>
         <img src="" id="아군힐러" class="오브젝트" />
         <div class="오브젝트 기지" id="적군기지">적군기지</div>
+        <img src='https://ifh.cc/g/6MGwvc.png' class= '오브젝트 나무' id="나무1"/>
         <div></div>
       </div>
       <div id="플레이어" class="오브젝트">
@@ -577,7 +600,7 @@
         눈덩이카운터: 0,
         기관총카운터: { 적군: 0, 아군: 0 },
       };
-      let 변수 = { 재장전: { 플레이어: true, 적군기관총: true }, 눈남음: 5 };
+      let 변수 = { 재장전: { 플레이어: true, 적군기관총: true }, 눈남음: 5 ,나무: true};
       const 이미지 = {
         캐릭터: {
           정보: ['w1.png', 'w2.png', 'w3.png'],
@@ -1080,6 +1103,23 @@
           /*if (요소['#적군기관총'].체력 == 0) {
             HTML('#적군기관총 img').src = 'G1D.png';
           }*/
+          if(변수.나무){
+          변수.나무=false;
+          HTML('#나무1').style.bottom = '9%';
+          HTML('#나무3').style.bottom = '9%';
+          HTML('#나무2').style.bottom = '9%';
+          const 나무의식 = setInterval(()=>{
+            if(터치('#플레이어','#나무1') || 터치('#플레이어','#나무2')|| 터치('#플레이어','#나무3')){
+              요소['#플레이어'].체력 -= 50;
+            }
+          },100);
+          setTimeout(()=>{clearInterval(나무의식)},450)
+          setTimeout(()=>{HTML('#나무1').style.bottom = '-400px';HTML('#나무2').style.bottom = '-400px';HTML('#나무3').style.bottom = '-400px'},500)
+          setTimeout(()=>{
+            변수.나무=true;
+          },1500)
+          }
+
           let 기관총감지 =
             HTML('#적군기관총').getBoundingClientRect().left -
               HTML('body').getBoundingClientRect().width / 2 <
