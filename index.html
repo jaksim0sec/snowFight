@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>눈싸움5</title>
+    <title>눈싸움</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,6 +11,86 @@
       rel="stylesheet"
     />
     <style>
+    #window {
+        font-family: 'Noto Sans KR', serif;
+        font-optical-sizing: auto;
+        font-weight: 600;
+        font-style: normal;
+        position: absolute;
+        z-index: 10;
+        width: 440px;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0px 0px 5px #00000030;
+        display: flexbox;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        align-content: center;
+        transition: height 0.5s ease;
+        background: linear-gradient(180deg, #25222180, #00000060);
+        color: #fff2e1;
+        backdrop-filter: blur(5px);
+        transform: scale(1);
+        box-shadow: inset 8px 8px 5px #ffffff20, inset -8px -8px 5px #00000060;
+      }
+
+      .window-holder {
+        position: absolute;
+        z-index: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #00000080;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        backdrop-filter: blur(2px);
+      }
+
+      #close {
+        transition: all 0.5s ease;
+        display: none;
+      }
+      #window-cont {
+        width: 100%;
+      }
+
+      #window button {
+        border-radius: 20px;
+        background-color: #ffffff10;
+        color: #ffffffcc;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        padding: 8px 16px;
+        border: none;
+        height: 46px;
+        width: 200px;
+        font-size: 16px;
+        cursor: pointer;
+        opacity: 0;
+        animation: showB 0.5s ease-in-out;
+        box-shadow: inset 4px 4px 5px #ffffff15, inset -4px -4px 5px #00000060;
+      }
+
+      @keyframes showB {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      #window button:hover {
+        background-color: #ffffff20;
+        color: white;
+        transform: scale(1.02) translateY(-4px);
+        filter: brightness(1.2);
+      }
+
+      #window button:active {
+        transform: scale(0.9);
+      }
       body {
         width: 100vw;
         height: 100vh;
@@ -556,10 +636,89 @@
         position: absolute;
         pointer-events: none;
       }
+      #window span{
+        font-weight: bolder;
+      }
     </style>
     <div id="loader"></div>
     <script>
+    알림('눈덩이 어드밴쳐',`
+      <span>A, D</span> 키로 좌우로 이동할 수 있어요
+      <div></div>
+      <span>s </span> 키로 앉고, <span>키</span>로 일어나요
+      <div></div>
+      <span>마우스 클릭</span>을 통해 마우스 위치로 눈덩이를 던질 수 있어요.
+      <div></div>
+      좌측 상단에는 <span> 남은 시간</span>이 나와요. <div></div>
+      그 밑에는 <span>적용된 스킬</span>, <span>남은 눈덩이 수</span>, <span>아이템 가방</span>이 있어요
+      <div></div>
+      열쇠 버튼을 통해 열쇠를 얻고, 빨간색 문을 열고 탈출해보세요!
+      <div></div>
+      점수는 남은시간, 체력이 모두 반영됩니다.
+    `,'시작하기','시간관리();체력끝인식();')
       //기본함수팩
+      function 시간관리(){
+        const 타이머 = setInterval(() => {
+        시간--;
+        HTML('#시간').innerHTML = ` ${Math.floor(시간 / 60)} : ${
+          시간 % 60
+        } 남음`;
+        if (시간 <= 0) {
+          //alert('시간끝');
+          요소['#플레이어'].체력 = 0;
+          clearInterval(타이머);
+        }
+      }, 1000);
+      }
+      function 체력끝인식(){
+        const 체 = setInterval(()=>{
+          if((요소['#플레이어'].체력) <= 0 && (최종점수 !== null)){
+            알림('사망하였습니다.',`시간제한이 끝났거나 체력이 0 이 되었어요!
+            <div></div>
+            🏆최종점수 :${최종점수}
+            <div></div>
+            📜보상코드 :${코드()}`,'돌아가기','location.href=`https://sccm-two.vercel.app`;')
+            clearInterval(체);
+          }
+          console.log('우')
+        },50)
+      }
+      function 시간포멧() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        return `${day}${hours}${minutes}`;
+      }
+
+      function 숫자암호화(input) {
+        const map = {
+          1: 'A',
+          2: 'B',
+          3: 'C',
+          4: 'D',
+          5: 'E',
+          6: 'F',
+          7: 'G',
+          8: 'H',
+          9: 'I',
+          0: 'J',
+        };
+
+        return input.replace(/[0-9]/g, (match) => map[match]);
+      }
+
+      function 끝(){
+        window.location.href='https://sccm-two.vercel.app';
+      }
+
+      function 코드() {
+        let result = 'Z1' + 숫자암호화(String(최종점수));
+        result += '2';
+        result += 숫자암호화(시간포멧());
+        return result;
+      }
       function HTML(name) {
         return document.querySelector(name);
       }
@@ -1115,15 +1274,17 @@
 
       //이동('#플레이어', 100, 1);
       //게임일반함수
+      let 반환점수 = null;
       let 최종점수 = null;
       function 전체반복관리() {
         보상('고각도발사기', 1);
         보상('돌멩이', 1);
         //보상('열쇠', 1);
         const 관리자 = setInterval(() => {
-          if(터치('#플레이어','#적군기지') && 요소['#플레이어'].적용.includes('엸')){
+          if(터치('#플레이어','#적군기지') && 요소['#플레이어'].적용.includes('엸') || 요소['#플레이어'].체력 <= 0){
             최종점수 = ((((시간-10+요소['#플레이어'].체력/10)/100)/(3/10))*요소['#플레이어'].체력/100).toFixed(2);
-            alert(최종점수);clearInterval(관리자)
+            if(최종점수 < 1){최종점수++}
+            ;clearInterval(관리자);
           };
           /*if (요소['#적군기관총'].체력 == 0) {
             HTML('#적군기관총 img').src = 'G1D.png';
@@ -1336,17 +1497,69 @@
         }
       }
 
-      const 타이머 = setInterval(() => {
-        시간--;
-        HTML('#시간').innerHTML = ` ${Math.floor(시간 / 60)} : ${
-          시간 % 60
-        } 남음`;
-        if (시간 <= 0) {
-          alert('시간끝');
-          요소['#플레이어'].체력 = 0;
-          clearInterval(타이머);
+      async function textEffect(name, content, speed) {
+        const element = HTML(name);
+        if (!element) {
+          console.error(`${name}을 찾을 수 없습니다.`);
+          return;
         }
-      }, 1000);
+
+        let processedContent = '';
+        let index = 0;
+
+        while (index < content.length) {
+          const char = content[index];
+
+          if (char === '<') {
+            processedContent += char;
+            index++;
+            while (content[index] !== '>' && index < content.length) {
+              processedContent += content[index];
+              index++;
+            }
+            processedContent += '>';
+          } else {
+            processedContent += char;
+          }
+
+          element.innerHTML = processedContent + '●'; //겁나 열심히 만든 GPT 느낌 텍스트
+          if (content[index] !== ' ') {
+            await new Promise((resolve) => setTimeout(resolve, speed));
+          }
+
+          index++;
+        }
+        element.innerHTML = processedContent;
+      }
+
+      async function 알림(title, content, act, work) {
+        const windowHolder = document.createElement('div');
+        windowHolder.classList.add('window-holder');
+
+        const windowContent = document.createElement('div');
+        windowContent.id = 'window';
+
+        const centerContent = `
+          <center>
+          <div style="font-size:20px;font-weight:bold">${title}</div>
+          <div style="margin:20px;"><hr style="width: 60%; height: 2px; background-color: #FFFFFF50; border: none;"></div>
+          <p id="window-cont"></p>
+          <div style="height:10px;"></div>
+          <button id="close" onclick="${work} setTimeout(()=>{HTML('.window-holder').remove();},100)">${act}</button>
+          </center>
+      `;
+
+        windowContent.innerHTML = centerContent;
+        windowHolder.appendChild(windowContent);
+        document.body.appendChild(windowHolder);
+        await textEffect('#window-cont', content, 14);
+
+        const closeButton = document.querySelector('#close');
+        closeButton.style.opacity = 0;
+        closeButton.style.display = 'block';
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        closeButton.style.opacity = 1;
+      }
     </script>
   </body>
 </html>
